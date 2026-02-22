@@ -73,7 +73,8 @@ const googleAuthCallback = asyncHandler(async (req, res) => {
     );
 
     // Redirect to frontend with token
-    res.redirect(`http://localhost:5173/oauth/callback?token=${token}`);
+    const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
+    res.redirect(`${clientUrl}/oauth/callback?token=${token}`);
 });
 
 export { register, login, googleAuthCallback };

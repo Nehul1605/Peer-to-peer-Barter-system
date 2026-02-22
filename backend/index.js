@@ -15,8 +15,13 @@ const app = express();
 const PORT = process.env.PORT || 8000;
 
 app.use(cors({
-    origin: 'http://localhost:5173',
-    credentials: true
+    origin: [
+        'http://localhost:5173', 
+        process.env.CLIENT_URL,
+        'https://peer-to-peer-barter-system.vercel.app' 
+    ],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
 }));
 app.use(express.json());
 app.use(passport.initialize());
