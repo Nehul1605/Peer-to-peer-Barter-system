@@ -27,6 +27,10 @@ const Session = sequelize.define('Session', {
     type: DataTypes.ENUM('PENDING', 'SCHEDULED', 'COMPLETED', 'CANCELLED'),
     defaultValue: 'PENDING'
   },
+  meetingLink: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
   scheduledAt: {
     type: DataTypes.DATE,
     allowNull: false
