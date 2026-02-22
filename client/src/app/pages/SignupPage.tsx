@@ -5,30 +5,32 @@ import { Mail, Lock, User, ArrowRight } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
+import { useAuth } from '../context/AuthContext';
 
-interface SignupPageProps {
-  onSignup: () => void;
-}
-
-export default function SignupPage({ onSignup }: SignupPageProps) {
+export default function SignupPage() {
   const navigate = useNavigate();
+  const { signup } = useAuth();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Mock signup - in real app, this would create account
-    onSignup();
-    navigate('/dashboard');
+    setLoading(true);
+    try {
+      await signup({ name, email, password });
+      navigate('/login');
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="min-h-screen bg-[var(--background)] text-white flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Animated gradient background */}
       <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/20 via-brand-secondary/20 to-brand-primary/20 animate-gradient" />
-      
-      {/* Floating orbs */}
       <div className="absolute top-20 right-10 w-72 h-72 bg-brand-secondary/20 rounded-full blur-3xl animate-pulse" />
       <div className="absolute bottom-20 left-10 w-96 h-96 bg-brand-primary/20 rounded-full blur-3xl animate-pulse delay-1000" />
 
@@ -38,21 +40,19 @@ export default function SignupPage({ onSignup }: SignupPageProps) {
         transition={{ duration: 0.5 }}
         className="relative z-10 w-full max-w-md"
       >
-        {/* Logo/Brand */}
         <Link to="/" className="block mb-8 text-center">
           <h1 className="text-3xl font-bold bg-gradient-to-r from-brand-primary to-brand-secondary bg-clip-text text-transparent">
             SkillBarter
           </h1>
         </Link>
 
-        {/* Signup Form */}
         <div className="bg-neutral-900/40 backdrop-blur-xl border border-neutral-800 rounded-2xl p-8 shadow-2xl">
           <h2 className="text-2xl mb-2">Create Account</h2>
-          <p className="text-neutral-400 mb-6">Join the skill exchange community</p>
+          <p className="text-neutral-400 mb-6">Join the community of skill swappers</p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <Label htmlFor="name" className="text-neutral-300">Full Name</Label>
+              <Label htmlFor="name" className="text-neutral-300">Name</Label>
               <div className="relative mt-1">
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
                 <Input
@@ -99,37 +99,22 @@ export default function SignupPage({ onSignup }: SignupPageProps) {
               </div>
             </div>
 
-            <div className="text-sm text-neutral-400">
-              <label className="flex items-start gap-2 cursor-pointer">
-                <input type="checkbox" className="mt-1 rounded border-neutral-800 bg-neutral-900/40" required />
-                <span>
-                  I agree to the{' '}
-                  <a href="#" className="text-brand-primary hover:text-brand-primary">
-                    Terms of Service
-                  </a>{' '}
-                  and{' '}
-                  <a href="#" className="text-brand-primary hover:text-brand-primary">
-                    Privacy Policy
-                  </a>
-                </span>
-              </label>
-            </div>
-
             <Button
               type="submit"
+              disabled={loading}
               className="w-full bg-gradient-to-r from-brand-primary to-brand-secondary hover:from-brand-primary hover:to-brand-secondary text-white group"
             >
-              Create Account
-              <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              {loading ? 'Creating...' : 'Create Account'}
+              {!loading && <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />}
             </Button>
           </form>
 
-          <div className="mt-6 text-center text-sm text-neutral-400">
+          <p className="mt-6 text-center text-neutral-400 text-sm">
             Already have an account?{' '}
-            <Link to="/login" className="text-brand-primary hover:text-brand-primary">
+            <Link to="/login" className="text-brand-primary hover:underline">
               Sign in
             </Link>
-          </div>
+          </p>
         </div>
       </motion.div>
     </div>

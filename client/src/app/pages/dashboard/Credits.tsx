@@ -1,9 +1,12 @@
+import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { Coins, TrendingUp, TrendingDown, Clock, Calendar, ArrowUpRight, ArrowDownRight } from 'lucide-react';
+import { Coins, History, TrendingUp, Clock, Calendar, ArrowUpRight, ArrowDownRight, Users, Star } from 'lucide-react';
 import { Card } from '../../components/ui/card';
+import { useAuth } from '../../context/AuthContext';
+import api from '../../services/api';
 
 interface Transaction {
-  id: number;
+  id: string;
   type: 'earned' | 'spent';
   amount: number;
   description: string;
@@ -13,281 +16,208 @@ interface Transaction {
 }
 
 export default function Credits() {
-  const currentBalance = 240;
-  const totalEarned = 540;
-  const totalSpent = 300;
+  const { user } = useAuth();
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [totalEarned, setTotalEarned] = useState(0);
+  const [totalSpent, setTotalSpent] = useState(0);
 
-  const transactions: Transaction[] = [
-    {
-      id: 1,
-      type: 'earned',
-      amount: 60,
-      description: 'Teaching session completed',
-      partner: 'John Doe',
-      date: '2026-02-17',
-      skill: 'TypeScript',
-    },
-    {
-      id: 2,
-      type: 'spent',
-      amount: 90,
-      description: 'Learning session completed',
-      partner: 'Alex Brown',
-      date: '2026-02-15',
-      skill: 'Node.js',
-    },
-    {
-      id: 3,
-      type: 'earned',
-      amount: 45,
-      description: 'Teaching session completed',
-      partner: 'Lisa Wang',
-      date: '2026-02-14',
-      skill: 'GraphQL',
-    },
-    {
-      id: 4,
-      type: 'spent',
-      amount: 60,
-      description: 'Learning session completed',
-      partner: 'Mike Chen',
-      date: '2026-02-12',
-      skill: 'Python Programming',
-    },
-    {
-      id: 5,
-      type: 'earned',
-      amount: 60,
-      description: 'Teaching session completed',
-      partner: 'Sarah Johnson',
-      date: '2026-02-10',
-      skill: 'React Development',
-    },
-    {
-      id: 6,
-      type: 'spent',
-      amount: 90,
-      description: 'Learning session completed',
-      partner: 'Emma Davis',
-      date: '2026-02-08',
-      skill: 'UI/UX Design',
-    },
-    {
-      id: 7,
-      type: 'earned',
-      amount: 75,
-      description: 'Teaching session completed',
-      partner: 'Tom Wilson',
-      date: '2026-02-05',
-      skill: 'JavaScript',
-    },
-    {
-      id: 8,
-      type: 'spent',
-      amount: 60,
-      description: 'Learning session completed',
-      partner: 'Rachel Green',
-      date: '2026-02-03',
-      skill: 'Data Science',
-    },
-  ];
+  useEffect(() => {
+    const fetchHistory = async () => {
+      try {
+        const response = await api.get('/sessions');
+        if (response.data.success) {
+          const sessions = response.data.data;
+          
+          // Filter only completed sessions
+          const completedSessions = sessions.filter((s:any) => s.status === 'COMPLETED');
+          
+          const history: Transaction[] = completedSessions.map((s:any) => {
+             const isTeacher = s.teacherId === user?.id;
+             return {
+                 id: s.id,
+                 type: isTeacher ? 'earned' : 'spent',
+                 amount: 60, // Fixed rate per session for now
+                 description: isTeacher ? 'Teaching Session' : 'Learning Session',
+                 partner: isTeacher ? s.learner?.name : s.teacher?.name,
+                 date: new Date(s.updatedAt).toLocaleDateString(),
+                 skill: s.topic
+             }
+          });
 
-  const monthlyData = [
-    { month: 'Jan', earned: 180, spent: 120 },
-    { month: 'Feb', earned: 240, spent: 180 },
-  ];
+          setTransactions(history);
+          
+          // Calculate totals
+          const earned = history.filter(t => t.type === 'earned').reduce((acc, curr) => acc + curr.amount, 0);
+          const spent = history.filter(t => t.type === 'spent').reduce((acc, curr) => acc + curr.amount, 0);
+          setTotalEarned(earned);
+          setTotalSpent(spent);
+        }
+      } catch (error) {
+        console.error("Failed to fetch history", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (user) {
+        fetchHistory();
+    }
+  }, [user]);
 
   return (
-    <div className="max-w-6xl mx-auto">
-      {/* Header */}
+    <div className="max-w-7xl mx-auto">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="mb-8"
       >
-        <h1 className="text-3xl mb-2 flex items-center gap-2">
-          <Coins className="w-8 h-8 text-yellow-400" />
-          Credit Balance
-        </h1>
-        <p className="text-neutral-400">
-          Track your earned and spent credits from skill exchange sessions
-        </p>
+        <h1 className="text-3xl font-bold mb-2">Credits Overview</h1>
+        <p className="text-neutral-400">Track your earnings and spending across the platform</p>
       </motion.div>
 
-      {/* Balance Card */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.1 }}
-        className="mb-8"
-      >
-        <Card className="bg-gradient-to-r from-yellow-500/20 via-orange-500/20 to-amber-500/20 border-yellow-500/30 p-8 relative overflow-hidden">
-          {/* Background decoration */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-yellow-500/10 rounded-full blur-3xl" />
-          
-          <div className="relative">
-            <p className="text-neutral-300 mb-2">Current Balance</p>
-            <div className="flex items-baseline gap-2 mb-6">
-              <span className="text-6xl font-bold text-yellow-400">{currentBalance}</span>
-              <span className="text-2xl text-neutral-400">credits</span>
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+        >
+          <Card className="bg-neutral-900/40 backdrop-blur-xl border-neutral-800 p-6 relative overflow-hidden group hover:border-brand-primary/50 transition-colors">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-brand-primary/10 rounded-full blur-2xl -translate-y-16 translate-x-16 group-hover:bg-brand-primary/20 transition-colors" />
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-12 h-12 rounded-xl bg-brand-primary/20 flex items-center justify-center">
+                <Coins className="w-6 h-6 text-brand-primary" />
+              </div>
+              <p className="text-sm text-neutral-400 font-medium">Current Balance</p>
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-neutral-900/40 backdrop-blur-xl rounded-lg p-4 border border-neutral-800">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center">
-                    <TrendingUp className="w-5 h-5 text-green-400" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-neutral-400">Total Earned</p>
-                    <p className="text-2xl font-bold text-green-400">{totalEarned}</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-neutral-900/40 backdrop-blur-xl rounded-lg p-4 border border-neutral-800">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="w-10 h-10 rounded-lg bg-brand-primary/20 flex items-center justify-center">
-                    <TrendingDown className="w-5 h-5 text-brand-primary" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-neutral-400">Total Spent</p>
-                    <p className="text-2xl font-bold text-brand-primary">{totalSpent}</p>
-                  </div>
-                </div>
-              </div>
+            <h3 className="text-3xl font-bold mb-2">{user?.credits || 0}</h3>
+            <div className="flex items-center text-sm text-neutral-400">
+              <span>Available Credits</span>
             </div>
-          </div>
-        </Card>
-      </motion.div>
+          </Card>
+        </motion.div>
 
-      {/* Monthly Overview */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-        className="mb-8"
-      >
-        <Card className="bg-neutral-900/40 backdrop-blur-xl border-neutral-800 p-6">
-          <h2 className="text-xl font-semibold mb-6">Monthly Overview</h2>
-          
-          <div className="space-y-4">
-            {monthlyData.map((data, index) => (
-              <div key={data.month} className="space-y-2">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-neutral-400">{data.month} 2026</span>
-                  <span className="text-neutral-300">
-                    Net: {data.earned - data.spent > 0 ? '+' : ''}{data.earned - data.spent} credits
-                  </span>
-                </div>
-                <div className="flex gap-2 h-8">
-                  <div
-                    className="bg-green-500/30 border border-green-500/50 rounded flex items-center justify-center text-xs font-medium"
-                    style={{ width: `${(data.earned / (data.earned + data.spent)) * 100}%` }}
-                  >
-                    +{data.earned}
-                  </div>
-                  <div
-                    className="bg-brand-primary/30 border border-brand-primary/50 rounded flex items-center justify-center text-xs font-medium"
-                    style={{ width: `${(data.spent / (data.earned + data.spent)) * 100}%` }}
-                  >
-                    -{data.spent}
-                  </div>
-                </div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+        >
+          <Card className="bg-neutral-900/40 backdrop-blur-xl border-neutral-800 p-6 relative overflow-hidden group hover:border-brand-secondary/50 transition-colors">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-green-500/10 rounded-full blur-2xl -translate-y-16 translate-x-16 group-hover:bg-green-500/20 transition-colors" />
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center">
+                <ArrowUpRight className="w-6 h-6 text-green-500" />
               </div>
-            ))}
-          </div>
-        </Card>
-      </motion.div>
+              <p className="text-sm text-neutral-400 font-medium">Total Earned</p>
+            </div>
+            <h3 className="text-3xl font-bold mb-2">{totalEarned}</h3>
+            <div className="flex items-center text-green-400 text-sm">
+              <TrendingUp className="w-4 h-4 mr-1" />
+              <span>+12% vs last month</span>
+            </div>
+          </Card>
+        </motion.div>
 
-      {/* Transaction History */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
-      >
-        <Card className="bg-neutral-900/40 backdrop-blur-xl border-neutral-800 p-6">
-          <h2 className="text-xl font-semibold mb-6">Transaction History</h2>
-          
-          <div className="space-y-3">
-            {transactions.map((transaction, index) => (
-              <motion.div
-                key={transaction.id}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.3 + index * 0.05 }}
-                className="bg-neutral-900/40 border border-neutral-800 rounded-lg p-4 hover:bg-neutral-900/60 transition-all"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex items-start gap-3 flex-1">
-                    {/* Icon */}
-                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                      transaction.type === 'earned'
-                        ? 'bg-green-500/20 text-green-400'
-                        : 'bg-brand-primary/20 text-brand-primary'
-                    }`}>
-                      {transaction.type === 'earned' ? (
-                        <ArrowUpRight className="w-5 h-5" />
-                      ) : (
-                        <ArrowDownRight className="w-5 h-5" />
-                      )}
-                    </div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+        >
+          <Card className="bg-neutral-900/40 backdrop-blur-xl border-neutral-800 p-6 relative overflow-hidden group hover:border-red-500/50 transition-colors">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/10 rounded-full blur-2xl -translate-y-16 translate-x-16 group-hover:bg-red-500/20 transition-colors" />
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-12 h-12 rounded-xl bg-red-500/20 flex items-center justify-center">
+                <ArrowDownRight className="w-6 h-6 text-red-500" />
+              </div>
+              <p className="text-sm text-neutral-400 font-medium">Total Spent</p>
+            </div>
+            <h3 className="text-3xl font-bold mb-2">{totalSpent}</h3>
+            <div className="flex items-center text-neutral-400 text-sm">
+              <Clock className="w-4 h-4 mr-1" />
+              <span>Last spent 2 days ago</span>
+            </div>
+          </Card>
+        </motion.div>
+      </div>
 
-                    {/* Details */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between gap-2 mb-1">
-                        <div>
-                          <h3 className="font-medium">{transaction.skill}</h3>
-                          <p className="text-sm text-neutral-400">{transaction.description}</p>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+          >
+            <Card className="bg-neutral-900/40 backdrop-blur-xl border-neutral-800 p-6">
+              <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
+                <History className="w-5 h-5" />
+                Transaction History
+              </h3>
+              <div className="space-y-4">
+                {transactions.map((transaction) => (
+                  <div
+                    key={transaction.id}
+                    className="flex items-center justify-between p-4 rounded-xl bg-neutral-800/30 border border-neutral-800/50 hover:border-neutral-700 transition-colors"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                        transaction.type === 'earned' 
+                          ? 'bg-green-500/20 text-green-500' 
+                          : 'bg-red-500/20 text-red-500'
+                      }`}>
+                        {transaction.type === 'earned' ? <ArrowUpRight className="w-5 h-5" /> : <ArrowDownRight className="w-5 h-5" />}
+                      </div>
+                      <div>
+                        <p className="font-medium text-white">{transaction.description}</p>
+                        <div className="flex items-center gap-2 text-sm text-neutral-400">
+                          <span className="flex items-center gap-1">
+                            <Calendar className="w-3 h-3" />
+                            {transaction.date}
+                          </span>
+                          <span>•</span>
+                          <span>{transaction.partner}</span>
                         </div>
                       </div>
-                      <div className="flex flex-wrap gap-3 text-xs text-neutral-500 mt-2">
-                        <span className="flex items-center gap-1">
-                          👤 {transaction.partner}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <Calendar className="w-3 h-3" />
-                          {new Date(transaction.date).toLocaleDateString('en-US', { 
-                            month: 'short', 
-                            day: 'numeric',
-                            year: 'numeric'
-                          })}
-                        </span>
-                      </div>
+                    </div>
+                    <div className={`text-lg font-bold ${
+                      transaction.type === 'earned' ? 'text-green-400' : 'text-white'
+                    }`}>
+                      {transaction.type === 'earned' ? '+' : '-'}{transaction.amount}
                     </div>
                   </div>
-
-                  {/* Amount */}
-                  <div className={`text-right flex-shrink-0 ${
-                    transaction.type === 'earned'
-                      ? 'text-green-400'
-                      : 'text-brand-primary'
-                  }`}>
-                    <p className="text-xl font-bold">
-                      {transaction.type === 'earned' ? '+' : '-'}{transaction.amount}
-                    </p>
-                    <p className="text-xs text-neutral-500">credits</p>
+                ))}
+              </div>
+            </Card>
+          </motion.div>
+        </div>
+        
+        <div className="lg:col-span-1">
+            <Card className="bg-neutral-900/40 backdrop-blur-xl border-neutral-800 p-6 mb-6">
+              <h3 className="text-xl font-bold mb-6">Ways to Earn</h3>
+              <div className="space-y-6">
+                <div className="flex gap-4">
+                  <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center shrink-0">
+                     <Coins className="w-5 h-5 text-blue-500" />
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-white mb-1">Teach a Session</h4>
+                    <p className="text-sm text-neutral-400">Earn 60 credits per hour by teaching your skills</p>
                   </div>
                 </div>
-              </motion.div>
-            ))}
-          </div>
-        </Card>
-      </motion.div>
+                 <div className="flex gap-4">
+                  <div className="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center shrink-0">
+                     <Star className="w-5 h-5 text-purple-500" />
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-white mb-1">Get Rated 5 Stars</h4>
+                    <p className="text-sm text-neutral-400">Bonus 10 credits for excellent teaching reviews</p>
+                  </div>
+                </div>
+              </div>
+            </Card>
+        </div>
 
-      {/* Info Box */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.6 }}
-        className="mt-8 bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4"
-      >
-        <p className="text-sm text-neutral-300">
-          💰 <strong>How Credits Work:</strong> Every minute you spend in a session (teaching or learning) 
-          earns you 1 credit. A 60-minute session = 60 credits. Use credits to book learning sessions with 
-          other users. The system ensures fair exchange—both participants always earn equal credits!
-        </p>
-      </motion.div>
+      </div>
     </div>
   );
 }
