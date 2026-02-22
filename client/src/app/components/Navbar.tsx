@@ -2,9 +2,11 @@ import { motion } from "motion/react";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const { isAuthenticated } = useAuth();
 
   return (
     <motion.nav
@@ -48,19 +50,31 @@ export function Navbar() {
 
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center gap-4">
-            <Link
-              to="/login"
-              className="px-6 py-2 text-neutral-300 hover:text-white transition-colors text-sm font-semibold"
-            >
-              Sign In
-            </Link>
-            <Link
-              to="/signup"
-              className="px-5 py-2.5 bg-brand-primary rounded-lg text-neutral-950 hover:opacity-90 transition-all duration-300 shadow-lg shadow-brand-primary/20"
-              style={{ fontWeight: 700 }}
-            >
-              Get Started
-            </Link>
+            {isAuthenticated ? (
+               <Link
+                to="/dashboard"
+                className="px-5 py-2.5 bg-brand-primary rounded-lg text-neutral-950 hover:opacity-90 transition-all duration-300 shadow-lg shadow-brand-primary/20"
+                style={{ fontWeight: 700 }}
+              >
+                Go to Dashboard
+              </Link>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  className="px-6 py-2 text-neutral-300 hover:text-white transition-colors text-sm font-semibold"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  to="/signup"
+                  className="px-5 py-2.5 bg-brand-primary rounded-lg text-neutral-950 hover:opacity-90 transition-all duration-300 shadow-lg shadow-brand-primary/20"
+                  style={{ fontWeight: 700 }}
+                >
+                  Get Started
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile menu button */}

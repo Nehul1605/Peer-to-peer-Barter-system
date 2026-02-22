@@ -1,15 +1,18 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { useState } from 'react';
 import { Toaster } from 'sonner';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
+import GoogleCallback from './pages/GoogleCallback';
 import DashboardLayout from './pages/dashboard/DashboardLayout';
 import DashboardHome from './pages/dashboard/DashboardHome';
 import SkillProfile from './pages/dashboard/SkillProfile';
 import Matching from './pages/dashboard/Matching';
 import Sessions from './pages/dashboard/Sessions';
 import Credits from './pages/dashboard/Credits';
+import MeetingRoom from './pages/dashboard/MeetingRoom';
+import SessionReview from './pages/dashboard/SessionReview';
 
 /**
  * SkillBarter - Peer-to-Peer Skill Exchange Platform
@@ -19,35 +22,31 @@ import Credits from './pages/dashboard/Credits';
  * - Authentication (Login/Signup)
  * - Dashboard with skill matching, sessions, and credits
  */
-export default function App() {
-  // Mock authentication state
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+  const { isAuthenticated, isLoading } = useAuth();
+  if (isLoading) return <div className="text-white">Loading...</div>;
+  return isAuthenticated ? children : <Navigate to="/login" replace />;
+};
 
+export default function App() {
   return (
-    <>
+    <AuthProvider>
       <Toaster position="top-right" richColors />
       <Router>
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<LandingPage />} />
-          <Route 
-            path="/login" 
-            element={<LoginPage onLogin={() => setIsAuthenticated(true)} />} 
-          />
-          <Route 
-            path="/signup" 
-            element={<SignupPage onSignup={() => setIsAuthenticated(true)} />} 
-          />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/oauth/callback" element={<GoogleCallback />} />
 
           {/* Protected Dashboard Routes */}
           <Route
             path="/dashboard"
             element={
-              isAuthenticated ? (
-                <DashboardLayout onLogout={() => setIsAuthenticated(false)} />
-              ) : (
-                <Navigate to="/login" replace />
-              )
+              <ProtectedRoute>
+                <DashboardLayout />
+              </ProtectedRoute>
             }
           >
             <Route index element={<DashboardHome />} />
@@ -55,12 +54,14 @@ export default function App() {
             <Route path="matching" element={<Matching />} />
             <Route path="sessions" element={<Sessions />} />
             <Route path="credits" element={<Credits />} />
+            <Route path="session/:sessionId/room" element={<MeetingRoom />} />
+            <Route path="session/:sessionId/review" element={<SessionReview />} />
           </Route>
 
           {/* Catch all - redirect to home */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Router>
-    </>
+    </AuthProvider>
   );
 }
