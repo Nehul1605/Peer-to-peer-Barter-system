@@ -8,7 +8,8 @@ dotenv.config({ path: './.env' });
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "/api/auth/google/callback"
+    callbackURL: "/api/auth/google/callback",
+    proxy: true // Important for cloud deployments (Render, Heroku, etc.) to handle HTTPS correctly
   },
   async function(accessToken, refreshToken, profile, cb) {
     try {

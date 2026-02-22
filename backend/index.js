@@ -14,6 +14,9 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 8000;
 
+// Trust proxy is required for Render/Vercel/Heroku to correctly identify protocol (http vs https)
+app.set('trust proxy', 1);
+
 app.use(cors({
     origin: [
         'http://localhost:5173', 
