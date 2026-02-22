@@ -12,19 +12,42 @@ export default function MeetingRoom() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
+  const [jwtToken, setJwtToken] = useState<string>('');
+  const [roomName, setRoomName] = useState<string>('');
   const apiRef = useRef<any>(null);
+  const startTimeRef = useRef<number | null>(null);
   
   // 60 minutes in milliseconds
   const SESSION_DURATION = 60 * 60 * 1000; 
 
   useEffect(() => {
-    const fetchSession = async () => {
+    const fetchSessionAndToken = async () => {
       try {
         const response = await api.get(`/sessions`); // In real app, fetch single session: /sessions/${sessionId}
         const foundSession = response.data.data.find((s: any) => s.id === sessionId);
         
         if (foundSession) {
            setSession(foundSession);
+           
+           // Set default room name
+           let finalRoomName = `SkillBarter-${sessionId}`;
+           
+           // Try to get JaaS token if configured
+           try {
+             const tokenRes = await api.get(`/sessions/${sessionId}/token`);
+             if (tokenRes.data.data.token) {
+                setJwtToken(tokenRes.data.data.token);
+                // Backend might return the required room name (though usually it's consistent)
+                if (tokenRes.data.data.roomName) {
+                    finalRoomName = tokenRes.data.data.roomName;
+                }
+             }
+           } catch (e) {
+             console.log("Using public server (no token)");
+           }
+           
+           setRoomName(finalRoomName);
+           
         } else {
            toast.error("Session not found");
            navigate('/dashboard/sessions');
@@ -36,22 +59,27 @@ export default function MeetingRoom() {
         setLoading(false);
       }
     };
-    fetchSession();
+    fetchSessionAndToken();
   }, [sessionId, navigate]);
 
   const handleApiReady = (externalApi: any) => {
     apiRef.current = externalApi;
     
-    // Start 60 minute timer
-    setTimeout(() => {
-        toast.info("Session time is up! Redirecting to review...");
-        handleMeetingEnd();
-    }, SESSION_DURATION);
+    externalApi.on('videoConferenceJoined', () => {
+        startTimeRef.current = Date.now();
+        console.log("Meeting joined, timer started");
+        
+        // Start 60 minute timer
+        setTimeout(() => {
+            toast.info("Session time is up! Redirecting to review...");
+            handleMeetingEnd();
+        }, SESSION_DURATION);
 
-    // Provide warning at 55 minutes
-    setTimeout(() => {
-        toast.warning("5 minutes remaining in session.");
-    }, SESSION_DURATION - (5 * 60 * 1000));
+        // Provide warning at 55 minutes
+        setTimeout(() => {
+            toast.warning("5 minutes remaining in session.");
+        }, SESSION_DURATION - (5 * 60 * 1000));
+    });
 
     // Listen for hangup
     externalApi.on('videoConferenceLeft', () => {
@@ -60,18 +88,24 @@ export default function MeetingRoom() {
   };
 
   const handleMeetingEnd = async () => {
+      let durationMinutes = 0;
+      if (startTimeRef.current) {
+          const durationMs = Date.now() - startTimeRef.current;
+          durationMinutes = Math.ceil(durationMs / (1000 * 60));
+      }
+      
       if (apiRef.current) {
           apiRef.current.dispose();
       }
       
-      // Navigate to review page
-      navigate(`/dashboard/session/${sessionId}/review`);
+      // Navigate to review page with actual duration
+      navigate(`/dashboard/session/${sessionId}/review?duration=${durationMinutes}`);
   };
 
   if (loading || !user) {
     return (
       <div className="h-[calc(100vh-4rem)] flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-brand-primary" />
+        <Loader2 className="h-8 w-8 animate-spin text-brand-primary" />
       </div>
     );
   }
@@ -92,8 +126,9 @@ export default function MeetingRoom() {
        </div>
        <div className="flex-1 overflow-hidden relative">
         <JitsiMeeting
-            domain="meet.jit.si"
-            roomName={`SkillBarter-${sessionId}`}
+            domain={jwtToken ? "8x8.vc" : "meet.jit.si"} 
+            roomName={roomName}
+            jwt={jwtToken || undefined}
             configOverwrite={{
                 startWithAudioMuted: true,
                 disableThirdPartyRequests: true,

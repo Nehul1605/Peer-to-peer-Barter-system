@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Star,  MessageSquare, CheckCircle } from 'lucide-react';
 import { Button } from '../../components/ui/button';
@@ -9,11 +9,14 @@ import api from '../../services/api';
 
 export default function SessionReview() {
   const { sessionId } = useParams();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [rating, setRating] = useState(0);
   const [hoveredRating, setHoveredRating] = useState(0);
   const [comment, setComment] = useState('');
   const [loading, setLoading] = useState(false);
+  
+  const durationCompleted = parseInt(searchParams.get('duration') || '0');
 
   const handleSubmit = async () => {
     if (rating === 0) {
@@ -23,8 +26,11 @@ export default function SessionReview() {
 
     setLoading(true);
     try {
-        // Mark session as completed
-        await api.put(`/sessions/${sessionId}`, { status: 'COMPLETED' });
+        // Mark session as completed with actual duration
+        await api.put(`/sessions/${sessionId}`, { 
+            status: 'COMPLETED',
+            actualDuration: durationCompleted 
+        });
         
         // Add review (assuming endpoint exists, or just log success for now)
         // await api.post(`/sessions/${sessionId}/reviews`, { rating, comment });
