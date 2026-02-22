@@ -174,7 +174,7 @@ export function HeroSection() {
                     <span className="px-2 py-1 rounded-md bg-green-500/20 text-green-400 text-xs">
                       Available
                     </span>
-                    <span className="text-neutral-400">25 credits/hour</span>
+                    <span className="text-neutral-400">60 credits/hour</span>
                   </div>
                 </div>
               }

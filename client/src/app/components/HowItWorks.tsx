@@ -68,7 +68,7 @@ export function HowItWorks() {
             >
               {/* Connector line */}
               {idx < steps.length - 1 && (
-                <div className="hidden md:block absolute top-20 left-full w-full h-0.5 bg-gradient-to-r from-brand-primary/50 to-transparent -z-10" />
+                <div className="hidden md:block absolute top-20 left-full w-8 h-0.5 bg-gradient-to-r from-brand-primary/50 to-transparent -z-10" />
               )}
 
               <div className="glass-strong rounded-2xl p-8 hover:bg-neutral-900/60 transition-all duration-300 group relative overflow-hidden">
