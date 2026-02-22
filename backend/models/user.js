@@ -30,7 +30,7 @@ const User = sequelize.define('User', {
   },
   credits: {
     type: DataTypes.INTEGER,
-    defaultValue: 5
+    defaultValue: 60
   },
   bio: {
     type: DataTypes.TEXT,
