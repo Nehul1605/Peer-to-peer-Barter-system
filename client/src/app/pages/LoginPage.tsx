@@ -28,7 +28,8 @@ export default function LoginPage() {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = 'http://localhost:8000/api/auth/google';
+    const backendUrl = import.meta.env.VITE_API_URL || 'https://peer-to-peer-barter-system.onrender.com/api';
+    window.location.href = `${backendUrl}/auth/google`;
   };
 
   return (
