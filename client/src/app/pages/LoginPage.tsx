@@ -29,7 +29,7 @@ export default function LoginPage() {
 
   const handleGoogleLogin = () => {
     const backendUrl = import.meta.env.VITE_API_URL || 'https://peer-to-peer-barter-system.onrender.com/api';
-    window.location.href = `${backendUrl}/auth/google/callback`;
+    window.location.href = `${backendUrl}/auth/google`;
   };
 
   return (
