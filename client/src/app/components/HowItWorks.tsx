@@ -1,7 +1,14 @@
 import { motion } from "motion/react";
 import { useState, useRef } from "react";
 import { useInView } from "./useInView";
-import { User, Users, Video, Zap, ArrowRight, CheckCircle2 } from "lucide-react";
+import {
+  User,
+  Users,
+  Video,
+  Zap,
+  ArrowRight,
+  CheckCircle2,
+} from "lucide-react";
 
 const steps = [
   {
@@ -33,7 +40,15 @@ const steps = [
   },
 ];
 
-function StepCard({ step, index, inView }: { step: typeof steps[0], index: number, inView: boolean }) {
+function StepCard({
+  step,
+  index,
+  inView,
+}: {
+  step: (typeof steps)[0];
+  index: number;
+  inView: boolean;
+}) {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
@@ -71,7 +86,9 @@ function StepCard({ step, index, inView }: { step: typeof steps[0], index: numbe
 
         {/* Step Number Badge */}
         <div className="absolute top-8 right-10 flex items-center gap-2">
-           <span className="text-4xl font-black text-white/5 group-hover:text-white/10 transition-colors uppercase italic tracking-tighter">0{index + 1}</span>
+          <span className="text-4xl font-black text-white/5 group-hover:text-white/10 transition-colors uppercase italic tracking-tighter">
+            0{index + 1}
+          </span>
         </div>
 
         <div className="relative z-10 flex flex-col h-full">
@@ -92,7 +109,9 @@ function StepCard({ step, index, inView }: { step: typeof steps[0], index: numbe
 
           <div className="mt-auto flex items-center gap-2">
             <CheckCircle2 className={`w-5 h-5 ${step.color}`} />
-            <span className="text-xs font-black uppercase tracking-widest text-neutral-500 group-hover:text-neutral-300 transition-colors">Verified Step</span>
+            <span className="text-xs font-black uppercase tracking-widest text-neutral-500 group-hover:text-neutral-300 transition-colors">
+              Verified Step
+            </span>
           </div>
         </div>
       </div>
@@ -142,10 +161,14 @@ export function HowItWorks() {
             </span>
           </div>
           <h2 className="text-5xl md:text-7xl mb-6 text-white tracking-tighter font-black">
-            Simple. <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-blue-400">Effective.</span>
+            Simple.{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-blue-400">
+              Effective.
+            </span>
           </h2>
           <p className="text-xl text-neutral-400 max-w-2xl mx-auto font-medium leading-relaxed">
-            A frictionless journey from finding a mentor to mastering a new craft through community-driven exchange.
+            A frictionless journey from finding a mentor to mastering a new
+            craft through community-driven exchange.
           </p>
         </motion.div>
 

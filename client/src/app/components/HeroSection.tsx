@@ -64,11 +64,20 @@ export function HeroSection() {
               transition={{ delay: 0.3 }}
               className="text-6xl md:text-7xl lg:text-8xl mb-8 text-white tracking-tighter font-black leading-[0.95]"
             >
-              Exchange <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-blue-400">Skills.</span>
+              Exchange{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-blue-400">
+                Skills.
+              </span>
               <br />
-              Earn <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-blue-400">Credits.</span>
+              Earn{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-blue-400">
+                Credits.
+              </span>
               <br />
-              Learn <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-blue-400">Anything.</span>
+              Learn{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-blue-400">
+                Anything.
+              </span>
             </motion.h1>
 
             <motion.p

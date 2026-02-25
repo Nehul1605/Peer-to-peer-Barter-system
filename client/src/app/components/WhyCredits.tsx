@@ -1,18 +1,26 @@
 import { motion } from "motion/react";
 import { useState, useRef } from "react";
 import { useInView } from "./useInView";
-import { 
-  ArrowRight, 
-  Users, 
-  Repeat, 
-  Sparkles, 
-  Coins, 
-  Scale, 
+import {
+  ArrowRight,
+  Users,
+  Repeat,
+  Sparkles,
+  Coins,
+  Scale,
   Infinity as InfinityIcon,
-  CheckCircle2
+  CheckCircle2,
 } from "lucide-react";
 
-function BenefitCard({ benefit, index, inView }: { benefit: any, index: number, inView: boolean }) {
+function BenefitCard({
+  benefit,
+  index,
+  inView,
+}: {
+  benefit: any;
+  index: number;
+  inView: boolean;
+}) {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
@@ -51,9 +59,9 @@ function BenefitCard({ benefit, index, inView }: { benefit: any, index: number, 
         <div className="relative z-10">
           <motion.div
             whileHover={{ rotate: 360, scale: 1.1 }}
-            transition={{ 
+            transition={{
               rotate: { duration: 1.5, ease: "easeInOut" },
-              scale: { type: "spring", stiffness: 300, damping: 20 }
+              scale: { type: "spring", stiffness: 300, damping: 20 },
             }}
             className={`w-16 h-16 rounded-2xl bg-white/5 ${benefit.color} flex items-center justify-center mb-6 group-hover:bg-white/10 transition-all duration-300 shadow-lg shadow-black/20`}
           >
@@ -67,10 +75,12 @@ function BenefitCard({ benefit, index, inView }: { benefit: any, index: number, 
           <p className="text-neutral-400 text-base leading-relaxed font-medium">
             {benefit.description}
           </p>
-          
+
           <div className="mt-8 pt-6 border-t border-white/5 flex items-center gap-2">
             <CheckCircle2 className={`w-4 h-4 ${benefit.color} opacity-50`} />
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-500">Verified System Benefit</span>
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-500">
+              Verified System Benefit
+            </span>
           </div>
         </div>
       </div>
@@ -103,10 +113,14 @@ export function WhyCredits() {
             </span>
           </div>
           <h2 className="text-5xl md:text-7xl mb-6 text-white tracking-tighter font-black">
-            Why Credits <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-blue-400">Work.</span>
+            Why Credits{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-blue-400">
+              Work.
+            </span>
           </h2>
           <p className="text-xl text-neutral-400 max-w-2xl mx-auto font-medium leading-relaxed">
-            A fair, decentralized economy built on mutual value exchange and shared knowledge.
+            A fair, decentralized economy built on mutual value exchange and
+            shared knowledge.
           </p>
         </motion.div>
 
@@ -120,14 +134,18 @@ export function WhyCredits() {
           >
             {/* Background elements for the diagram */}
             <div className="absolute top-0 left-0 w-full h-full opacity-30 pointer-events-none">
-               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-brand-primary to-transparent" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-brand-primary to-transparent" />
             </div>
 
             <div className="grid md:grid-cols-3 gap-12 items-center relative z-10">
               {/* Student A */}
               <motion.div
                 animate={inView ? { y: [0, -10, 0] } : {}}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
                 className="text-center group"
               >
                 <div className="relative inline-block mb-6">
@@ -136,10 +154,16 @@ export function WhyCredits() {
                     <Users className="w-16 h-16 text-neutral-950" />
                   </div>
                 </div>
-                <div className="text-white text-2xl font-black tracking-tight mb-1">Student A</div>
-                <div className="text-sm font-bold uppercase tracking-widest text-brand-primary mb-3">Professional Dev</div>
+                <div className="text-white text-2xl font-black tracking-tight mb-1">
+                  Student A
+                </div>
+                <div className="text-sm font-bold uppercase tracking-widest text-brand-primary mb-3">
+                  Professional Dev
+                </div>
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-white/5 border border-white/10">
-                  <span className="text-brand-primary font-black">+ 25 CREDITS</span>
+                  <span className="text-brand-primary font-black">
+                    + 25 CREDITS
+                  </span>
                 </div>
               </motion.div>
 
@@ -148,7 +172,11 @@ export function WhyCredits() {
                 <div className="flex items-center justify-center w-full">
                   <motion.div
                     animate={{ x: [0, 20, 0], opacity: [0.3, 1, 0.3] }}
-                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
                   >
                     <ArrowRight className="w-16 h-16 text-brand-primary" />
                   </motion.div>
@@ -156,13 +184,20 @@ export function WhyCredits() {
                 <div className="px-6 py-3 rounded-2xl bg-neutral-950/80 border border-white/5 backdrop-blur-xl">
                   <div className="flex items-center gap-3">
                     <Repeat className="w-5 h-5 text-brand-primary animate-spin-slow" />
-                    <span className="text-sm font-black uppercase tracking-[0.2em] text-white">Value Swap</span>
+                    <span className="text-sm font-black uppercase tracking-[0.2em] text-white">
+                      Value Swap
+                    </span>
                   </div>
                 </div>
                 <div className="flex items-center justify-center w-full">
                   <motion.div
                     animate={{ x: [0, -20, 0], opacity: [0.3, 1, 0.3] }}
-                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                      delay: 1,
+                    }}
                   >
                     <ArrowRight className="w-16 h-16 text-brand-secondary rotate-180" />
                   </motion.div>
@@ -172,7 +207,12 @@ export function WhyCredits() {
               {/* Student B */}
               <motion.div
                 animate={inView ? { y: [0, 10, 0] } : {}}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: 1,
+                }}
                 className="text-center group"
               >
                 <div className="relative inline-block mb-6">
@@ -181,19 +221,28 @@ export function WhyCredits() {
                     <Users className="w-16 h-16 text-neutral-950" />
                   </div>
                 </div>
-                <div className="text-white text-2xl font-black tracking-tight mb-1">Student B</div>
-                <div className="text-sm font-bold uppercase tracking-widest text-brand-secondary mb-3">Creative Designer</div>
+                <div className="text-white text-2xl font-black tracking-tight mb-1">
+                  Student B
+                </div>
+                <div className="text-sm font-bold uppercase tracking-widest text-brand-secondary mb-3">
+                  Creative Designer
+                </div>
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-white/5 border border-white/10">
-                  <span className="text-brand-secondary font-black">- 25 CREDITS</span>
+                  <span className="text-brand-secondary font-black">
+                    - 25 CREDITS
+                  </span>
                 </div>
               </motion.div>
             </div>
 
             {/* Subtext info */}
             <div className="mt-16 pt-8 border-t border-white/5 text-center">
-               <p className="text-neutral-500 text-sm font-medium max-w-lg mx-auto leading-relaxed">
-                  In this ecosystem, <span className="text-white">Student A</span> earns credits by sharing expertise, which they then use to learn from <span className="text-white">Student B</span>. No cash, just knowledge.
-               </p>
+              <p className="text-neutral-500 text-sm font-medium max-w-lg mx-auto leading-relaxed">
+                In this ecosystem, <span className="text-white">Student A</span>{" "}
+                earns credits by sharing expertise, which they then use to learn
+                from <span className="text-white">Student B</span>. No cash,
+                just knowledge.
+              </p>
             </div>
           </motion.div>
 
@@ -203,26 +252,34 @@ export function WhyCredits() {
               {
                 icon: Coins,
                 title: "No Money Required",
-                description: "Learn premium skills without spending real money. Use your expertise as currency.",
+                description:
+                  "Learn premium skills without spending real money. Use your expertise as currency.",
                 color: "text-amber-400",
                 glow: "rgba(251, 191, 36, 0.15)",
               },
               {
                 icon: Scale,
                 title: "Fair Exchange",
-                description: "Everyone's knowledge has equal value. Credits ensure a balanced ecosystem for all.",
+                description:
+                  "Everyone's knowledge has equal value. Credits ensure a balanced ecosystem for all.",
                 color: "text-blue-400",
                 glow: "rgba(96, 165, 250, 0.15)",
               },
               {
                 icon: InfinityIcon,
                 title: "Self-Sustaining",
-                description: "Teach to earn, learn to grow - a limitless cycle of knowledge sharing and community.",
+                description:
+                  "Teach to earn, learn to grow - a limitless cycle of knowledge sharing and community.",
                 color: "text-purple-400",
                 glow: "rgba(192, 132, 252, 0.15)",
               },
             ].map((benefit, idx) => (
-              <BenefitCard key={idx} benefit={benefit} index={idx} inView={inView} />
+              <BenefitCard
+                key={idx}
+                benefit={benefit}
+                index={idx}
+                inView={inView}
+              />
             ))}
           </div>
         </div>

@@ -83,7 +83,10 @@ export function CTASection() {
             transition={{ delay: 0.3 }}
             className="text-5xl md:text-8xl mb-12 text-white tracking-tighter font-black"
           >
-            Ready to Start Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-blue-400">Skill Journey?</span>
+            Ready to Start Your{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-blue-400">
+              Skill Journey?
+            </span>
           </motion.h2>
 
           <motion.p
