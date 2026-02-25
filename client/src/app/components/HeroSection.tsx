@@ -1,3 +1,4 @@
+import React from "react";
 import { motion } from "motion/react";
 import { Sparkles, ArrowRight } from "lucide-react";
 import { FloatingCard } from "./FloatingCard";
@@ -97,7 +98,7 @@ export function HeroSection() {
               transition={{ delay: 0.5 }}
               className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
             >
-              <Link to="/teach">
+              <Link to="/login">
                 <button className="group relative px-8 py-4 bg-brand-primary rounded-xl overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-brand-primary/20">
                   <span
                     className="relative z-10 flex items-center justify-center gap-2 text-background"
@@ -236,7 +237,7 @@ export function HeroSection() {
         className="absolute bottom-8 left-1/2 -translate-x-1/2"
       >
         <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center pt-2">
-          <div className="w-1 h-2 bg-neutral-900/400 rounded-full" />
+          <div className="w-1 h-2 bg-neutral-900/40 rounded-full" />
         </div>
       </motion.div>
     </section>
@@ -267,5 +268,3 @@ function CountUp({ end }: { end: number }) {
 
   return <>{count}</>;
 }
-
-import React from "react";

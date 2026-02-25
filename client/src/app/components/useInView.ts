@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from "react";
 
 export function useInView(options = {}) {
   const ref = useRef<HTMLElement>(null);
@@ -7,14 +7,12 @@ export function useInView(options = {}) {
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setInView(true);
-        }
+        setInView(entry.isIntersecting);
       },
       {
         threshold: 0.1,
         ...options,
-      }
+      },
     );
 
     if (ref.current) {

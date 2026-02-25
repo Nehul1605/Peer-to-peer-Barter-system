@@ -1,72 +1,178 @@
 import { useState, useRef } from "react";
 import { motion } from "motion/react";
 import { useInView } from "./useInView";
-import {
-  Atom,
-  Zap,
-  Wind,
-  Sparkles,
-  Layers,
-  Navigation,
-  Shapes,
-  BarChart3,
-  Cpu,
-} from "lucide-react";
+import { Sparkles, Cpu, Zap } from "lucide-react";
+
+const ReactIcon = (props: any) => (
+  <svg
+    viewBox="-11.5 -10.23174 23 20.46348"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <circle cx="0" cy="0" r="2.05" fill="currentColor" />
+    <g stroke="currentColor" strokeWidth="1">
+      <ellipse rx="11" ry="4.2" />
+      <ellipse rx="11" ry="4.2" transform="rotate(60)" />
+      <ellipse rx="11" ry="4.2" transform="rotate(120)" />
+    </g>
+  </svg>
+);
+
+const ViteIcon = (props: any) => (
+  <svg
+    viewBox="0 0 256 256"
+    xmlns="http://www.w3.org/2000/svg"
+    preserveAspectRatio="xMidYMid"
+    {...props}
+  >
+    <defs>
+      <linearGradient x1="0%" y1="0%" x2="100%" y2="0%" id="vite-a">
+        <stop stopColor="#41D1FF" offset="0%" />
+        <stop stopColor="#BD34FE" offset="100%" />
+      </linearGradient>
+    </defs>
+    <path
+      d="M255.153 37.935L129.231 254.231 3.308 37.935h251.845z"
+      fill="url(#vite-a)"
+    />
+    <path
+      d="M209.933 37.935L129.231 197.644 48.529 37.935h161.404z"
+      fill="#BD34FE"
+    />
+    <path
+      d="M141.538 10.615l-12.307-10.615-12.308 10.615h24.615z"
+      fill="#FFC517"
+    />
+  </svg>
+);
+
+const TailwindIcon = (props: any) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path d="M12.001 4.8c-3.2 0-5.2 1.6-6 4.8 1.2-1.6 2.6-2.2 4.2-1.8.913.228 1.565.89 2.288 1.624C13.666 10.618 15.027 12 18.001 12c3.2 0 5.2-1.6 6-4.8-1.2 1.6-2.6 2.2-4.2 1.8-.913-.228-1.565-.89-2.288-1.624C16.337 6.182 14.976 4.8 12.001 4.8zm-6 7.2c-3.2 0-5.2 1.6-6 4.8 1.2-1.6 2.6-2.2 4.2-1.8.913.228 1.565.89 2.288 1.624 1.177 1.194 2.538 2.576 5.512 2.576 3.2 0 5.2-1.6 6-4.8-1.2 1.6-2.6 2.2-4.2 1.8-.913-.228-1.565-.89-2.288-1.624C10.337 13.382 8.976 12 6.001 12z" />
+  </svg>
+);
+
+const FramerIcon = (props: any) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path d="M4 0h16v8l-8 8V8H4V0zm8 8h8v8l-8 8V16H4V8h8z" />
+  </svg>
+);
+
+const RadixIcon = (props: any) => (
+  <svg
+    viewBox="0 0 25 25"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path
+      d="M23.25 12C23.25 18.2132 18.2132 23.25 12 23.25C5.7868 23.25 0.75 18.2132 0.75 12C0.75 5.7868 5.7868 0.75 12 0.75C18.2132 0.75 23.25 5.7868 23.25 12Z"
+      fill="currentColor"
+    />
+  </svg>
+);
+
+const RouterIcon = (props: any) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    {...props}
+  >
+    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+  </svg>
+);
+
+const PostgreIcon = (props: any) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path d="M12.5 2c-3.4 0-6.1 2.2-7.5 5.5-.3-.1-.7-.1-1-.1C1.8 7.4.4 8.8.4 10.6c0 1.5 1 2.8 2.3 3.1-.1.4-.2.8-.2 1.2 0 3.9 3.1 7.1 7 7.1h6c4.4 0 8-3.6 8-8s-3.6-8-8-8c-.3 0-.7 0-1 .1C13.2 3.6 13 2 12.5 2z" />
+  </svg>
+);
+
+const RechartsIcon = (props: any) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path d="M3 13h2v7H3v-7zm4-5h2v12H7V8zm4 7h2v5h-2v-5zm4-10h2v15h-2V5zm4 8h2v7h-2v-7z" />
+  </svg>
+);
 
 const technologies = [
   {
     name: "React (v18)",
     description: "Modern UI Library",
-    icon: Atom,
+    icon: ReactIcon,
     color: "text-blue-400",
     glow: "rgba(96, 165, 250, 0.25)",
   },
   {
     name: "Vite",
     description: "Lightning Fast Build",
-    icon: Zap,
+    icon: ViteIcon,
     color: "text-yellow-400",
     glow: "rgba(250, 204, 21, 0.25)",
   },
   {
     name: "Tailwind CSS v4",
     description: "Next-gen Styling",
-    icon: Wind,
+    icon: TailwindIcon,
     color: "text-cyan-400",
     glow: "rgba(34, 211, 238, 0.25)",
   },
   {
     name: "Framer Motion",
     description: "Fluid Animations",
-    icon: Sparkles,
+    icon: FramerIcon,
     color: "text-pink-400",
     glow: "rgba(244, 114, 182, 0.25)",
   },
   {
     name: "Radix UI",
     description: "Headless Primitives",
-    icon: Layers,
+    icon: RadixIcon,
     color: "text-indigo-400",
     glow: "rgba(129, 140, 248, 0.25)",
   },
   {
     name: "React Router",
     description: "Dynamic Navigation",
-    icon: Navigation,
+    icon: RouterIcon,
     color: "text-red-400",
     glow: "rgba(248, 113, 113, 0.25)",
   },
   {
-    name: "Lucide React",
-    description: "Unified Iconography",
-    icon: Shapes,
-    color: "text-purple-400",
-    glow: "rgba(192, 132, 252, 0.25)",
+    name: "PostgreSQL",
+    description: "Relational Database",
+    icon: PostgreIcon,
+    color: "text-blue-500",
+    glow: "rgba(59, 130, 246, 0.25)",
   },
   {
     name: "Recharts",
     description: "Data Visualization",
-    icon: BarChart3,
+    icon: RechartsIcon,
     color: "text-emerald-400",
     glow: "rgba(52, 211, 153, 0.25)",
   },

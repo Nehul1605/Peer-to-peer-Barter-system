@@ -1,7 +1,16 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
 import { useInView } from "./useInView";
-import { Star, StarHalf, Quote, Sparkles } from "lucide-react";
+import {
+  Star,
+  StarHalf,
+  Quote,
+  Sparkles,
+  TrendingUp,
+  Zap,
+  ShieldCheck,
+  Activity,
+} from "lucide-react";
 
 const testimonials = [
   {
@@ -259,6 +268,63 @@ function Marquee({
   );
 }
 
+function StatItem({
+  value,
+  suffix = "",
+  label,
+  icon: Icon,
+  decimal = false,
+}: {
+  value: number;
+  suffix?: string;
+  label: string;
+  icon: any;
+  decimal?: boolean;
+}) {
+  const [count, setCount] = useState(0);
+  const { ref, inView } = useInView({ threshold: 0.5 });
+
+  useEffect(() => {
+    if (inView) {
+      const duration = 2000;
+      const steps = 60;
+      const increment = value / steps;
+      let current = 0;
+      const timer = setInterval(() => {
+        current += increment;
+        if (current >= value) {
+          setCount(value);
+          clearInterval(timer);
+        } else {
+          setCount(current);
+        }
+      }, duration / steps);
+      return () => clearInterval(timer);
+    } else {
+      setCount(0);
+    }
+  }, [inView, value]);
+
+  return (
+    <div ref={ref} className="flex-1 flex flex-col items-center group">
+      <div className="flex items-center gap-3 mb-3">
+        <div className="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center border border-white/10 group-hover:border-brand-primary/40 group-hover:bg-brand-primary/10 transition-all duration-500">
+          <Icon className="w-4 h-4 text-brand-primary" />
+        </div>
+        <div className="flex flex-col items-start translate-y-0.5">
+          <div className="text-3xl md:text-4xl font-black text-white tracking-tighter flex items-baseline">
+            {decimal ? count.toFixed(1) : Math.floor(count)}
+            <span className="text-brand-primary ml-0.5">{suffix}</span>
+          </div>
+        </div>
+      </div>
+      <div className="text-[9px] text-neutral-500 uppercase tracking-[0.3em] font-black pl-1">
+        {label}
+      </div>
+    </div>
+  );
+}
+
 export function Testimonials() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const { ref, inView } = useInView();
@@ -284,21 +350,21 @@ export function Testimonials() {
           (ref as any).current = node;
         }
       }}
-      className="py-20 bg-neutral-950 relative overflow-hidden"
+      className="py-32 bg-neutral-950 relative overflow-hidden"
     >
       <div className="container mx-auto px-6 relative z-10">
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={inView ? { opacity: 1, scale: 1 } : {}}
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
           className="text-center mb-24"
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 mb-6 rounded-full border border-brand-primary/20 bg-brand-primary/5">
-            <span className="relative flex h-2.5 w-2.5">
+            <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-primary opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-brand-primary"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-primary"></span>
             </span>
-            <span className="text-brand-primary text-xs font-black tracking-widest uppercase">
+            <span className="text-brand-primary text-[10px] font-black tracking-[0.2em] uppercase">
               Endorsements
             </span>
           </div>
@@ -315,39 +381,60 @@ export function Testimonials() {
         </motion.div>
       </div>
 
-      <div className="relative space-y-6 overflow-hidden px-4 md:px-0">
+      <div className="relative space-y-8 overflow-hidden">
         <Marquee items={row1} direction="left" speed={35} parallaxValue={x1} />
         <Marquee items={row2} direction="right" speed={40} parallaxValue={x2} />
       </div>
 
-      <div className="container mx-auto px-6 mt-20">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.5, duration: 0.8 }}
-          className="glass-strong p-10 rounded-[32px] border border-white/5 flex flex-wrap justify-around items-center gap-12 text-center"
-        >
-          <div>
-            <div className="text-4xl font-black text-white mb-2">4.7/5</div>
-            <div className="text-[10px] text-neutral-500 uppercase tracking-[0.4em] font-black">
-              Average Rating
-            </div>
+      <div className="container mx-auto px-6 mt-32">
+        <div className="relative max-w-3xl mx-auto">
+          {/* Decorative Corner Accents */}
+          <div className="absolute -top-3 -left-3 w-10 h-10 border-t-2 border-l-2 border-brand-primary/30 rounded-tl-xl" />
+          <div className="absolute -bottom-3 -right-3 w-10 h-10 border-b-2 border-r-2 border-brand-primary/30 rounded-br-xl" />
+
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ delay: 0.5, duration: 1 }}
+            className="bg-black/80 backdrop-blur-xl rounded-[30px] border border-white/10 p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden"
+          >
+            {/* Background Glow */}
+            <div className="absolute inset-0 bg-gradient-to-b from-brand-primary/5 to-transparent pointer-events-none" />
+
+            <StatItem
+              value={4.8}
+              suffix="/5"
+              label="Trust Score"
+              icon={TrendingUp}
+              decimal={true}
+            />
+
+            <div className="hidden md:block w-px h-16 bg-gradient-to-b from-transparent via-white/10 to-transparent" />
+
+            <StatItem
+              value={15}
+              suffix="k+"
+              label="Credits Exchanged"
+              icon={Zap}
+            />
+
+            <div className="hidden md:block w-px h-16 bg-gradient-to-b from-transparent via-white/10 to-transparent" />
+
+            <StatItem
+              value={100}
+              suffix="%"
+              label="Protocol Fee"
+              icon={ShieldCheck}
+            />
+          </motion.div>
+
+          <div className="mt-12 flex justify-center items-center gap-2">
+            <Activity className="w-4 h-4 text-brand-primary animate-pulse" />
+            <span className="text-[10px] text-neutral-500 font-black uppercase tracking-[0.2em]">
+              Real-time Network Statistics
+            </span>
           </div>
-          <div className="w-px h-16 bg-white/10 hidden md:block" />
-          <div>
-            <div className="text-4xl font-black text-white mb-2">15k+</div>
-            <div className="text-[10px] text-neutral-500 uppercase tracking-[0.4em] font-black">
-              Skills Swapped
-            </div>
-          </div>
-          <div className="w-px h-16 bg-white/10 hidden md:block" />
-          <div>
-            <div className="text-4xl font-black text-white mb-2">100%</div>
-            <div className="text-[10px] text-neutral-500 uppercase tracking-[0.4em] font-black">
-              Free Forever
-            </div>
-          </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
