@@ -1,7 +1,49 @@
+import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { useInView } from "./useInView";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
+
+function CountUp({
+  value,
+  suffix = "",
+  decimal = false,
+}: {
+  value: number;
+  suffix?: string;
+  decimal?: boolean;
+}) {
+  const [count, setCount] = useState(0);
+  const { ref, inView } = useInView({ threshold: 0.1 });
+
+  useEffect(() => {
+    if (inView) {
+      const duration = 2000;
+      const steps = 60;
+      const increment = value / steps;
+      let current = 0;
+      const timer = setInterval(() => {
+        current += increment;
+        if (current >= value) {
+          setCount(value);
+          clearInterval(timer);
+        } else {
+          setCount(current);
+        }
+      }, duration / steps);
+      return () => clearInterval(timer);
+    } else {
+      setCount(0);
+    }
+  }, [inView, value]);
+
+  return (
+    <span ref={ref}>
+      {decimal ? count.toFixed(1) : Math.floor(count)}
+      {suffix}
+    </span>
+  );
+}
 
 export function CTASection() {
   const { ref, inView } = useInView();
@@ -72,7 +114,8 @@ export function CTASection() {
           >
             <Sparkles className="w-4 h-4 text-brand-primary" />
             <span className="text-sm font-semibold text-brand-primary tracking-wide">
-              Join 10,000+ Students Already Learning
+              Join <CountUp value={10000} suffix="+" /> Students Already
+              Learning
             </span>
           </motion.div>
 
@@ -133,16 +176,25 @@ export function CTASection() {
           className="grid grid-cols-3 gap-8 mt-16 max-w-2xl mx-auto border-t border-white/5 pt-16"
         >
           {[
-            { value: "500K+", label: "Credits Exchanged" },
-            { value: "98%", label: "Satisfaction Rate" },
-            { value: "4.9/5", label: "Average Rating" },
+            { value: 15, suffix: "K+", label: "Credits Exchanged" },
+            { value: 98, suffix: "%", label: "Satisfaction Rate" },
+            {
+              value: 4.8,
+              suffix: "/5",
+              label: "Average Rating",
+              decimal: true,
+            },
           ].map((stat, idx) => (
             <div key={idx} className="text-center">
               <div
                 className="text-3xl md:text-4xl bg-gradient-to-r from-brand-primary to-brand-secondary bg-clip-text text-transparent mb-2"
                 style={{ fontWeight: 700 }}
               >
-                {stat.value}
+                <CountUp
+                  value={stat.value}
+                  suffix={stat.suffix}
+                  decimal={stat.decimal}
+                />
               </div>
               <div className="text-sm text-neutral-400 font-medium">
                 {stat.label}

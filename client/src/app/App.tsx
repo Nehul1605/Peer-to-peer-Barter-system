@@ -1,22 +1,32 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { Toaster } from 'sonner';
-import { AuthProvider, useAuth } from './context/AuthContext';
-import LandingPage from './pages/LandingPage';
-import LoginPage from './pages/LoginPage';
-import SignupPage from './pages/SignupPage';
-import GoogleCallback from './pages/GoogleCallback';
-import DashboardLayout from './pages/dashboard/DashboardLayout';
-import DashboardHome from './pages/dashboard/DashboardHome';
-import SkillProfile from './pages/dashboard/SkillProfile';
-import Matching from './pages/dashboard/Matching';
-import Sessions from './pages/dashboard/Sessions';
-import Credits from './pages/dashboard/Credits';
-import MeetingRoom from './pages/dashboard/MeetingRoom';
-import SessionReview from './pages/dashboard/SessionReview';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+} from "react-router-dom";
+import { Toaster } from "sonner";
+import { useEffect } from "react";
+import { AuthProvider, useAuth } from "./context/AuthContext";
+import LandingPage from "./pages/LandingPage";
+import LoginPage from "./pages/LoginPage";
+import SignupPage from "./pages/SignupPage";
+import GoogleCallback from "./pages/GoogleCallback";
+import HelpCenter from "./pages/knowledge/HelpCenter";
+import SafetyGuidelines from "./pages/knowledge/SafetyGuidelines";
+import TermsOfService from "./pages/knowledge/TermsOfService";
+import DashboardLayout from "./pages/dashboard/DashboardLayout";
+import DashboardHome from "./pages/dashboard/DashboardHome";
+import SkillProfile from "./pages/dashboard/SkillProfile";
+import Matching from "./pages/dashboard/Matching";
+import Sessions from "./pages/dashboard/Sessions";
+import Credits from "./pages/dashboard/Credits";
+import MeetingRoom from "./pages/dashboard/MeetingRoom";
+import SessionReview from "./pages/dashboard/SessionReview";
 
 /**
  * SkillBarter - Peer-to-Peer Skill Exchange Platform
- * 
+ *
  * Main application with routing for:
  * - Landing page
  * - Authentication (Login/Signup)
@@ -28,17 +38,29 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   return isAuthenticated ? children : <Navigate to="/login" replace />;
 };
 
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+}
+
 export default function App() {
   return (
     <AuthProvider>
       <Toaster position="top-right" richColors />
       <Router>
+        <ScrollToTop />
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/oauth/callback" element={<GoogleCallback />} />
+          <Route path="/help" element={<HelpCenter />} />
+          <Route path="/safety" element={<SafetyGuidelines />} />
+          <Route path="/terms" element={<TermsOfService />} />
 
           {/* Protected Dashboard Routes */}
           <Route
@@ -55,7 +77,10 @@ export default function App() {
             <Route path="sessions" element={<Sessions />} />
             <Route path="credits" element={<Credits />} />
             <Route path="session/:sessionId/room" element={<MeetingRoom />} />
-            <Route path="session/:sessionId/review" element={<SessionReview />} />
+            <Route
+              path="session/:sessionId/review"
+              element={<SessionReview />}
+            />
           </Route>
 
           {/* Catch all - redirect to home */}

@@ -1,4 +1,5 @@
 import { Github, Twitter, Linkedin, Mail } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export function Footer() {
   return (
@@ -46,7 +47,7 @@ export function Footer() {
                   href="#testimonials"
                   className="hover:text-brand-primary transition-all duration-300"
                 >
-                  Student Success
+                  Users Reviews
                 </a>
               </li>
             </ul>
@@ -59,28 +60,28 @@ export function Footer() {
             </h4>
             <ul className="space-y-3 text-sm text-neutral-400">
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="/help"
                   className="hover:text-brand-primary transition-all duration-300"
                 >
                   Help Center
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="/safety"
                   className="hover:text-brand-primary transition-all duration-300"
                 >
                   Safety Guidelines
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="/terms"
                   className="hover:text-brand-primary transition-all duration-300"
                 >
                   Terms of Service
-                </a>
+                </Link>
               </li>
             </ul>
           </div>

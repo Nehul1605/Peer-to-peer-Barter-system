@@ -132,11 +132,6 @@ export function WhyCredits() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="glass-strong rounded-[40px] p-8 md:p-16 mb-16 border border-white/10 bg-neutral-900/60 relative overflow-hidden shadow-2xl"
           >
-            {/* Background elements for the diagram */}
-            <div className="absolute top-0 left-0 w-full h-full opacity-30 pointer-events-none">
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-brand-primary to-transparent" />
-            </div>
-
             <div className="grid md:grid-cols-3 gap-12 items-center relative z-10">
               {/* Student A */}
               <motion.div
@@ -185,7 +180,7 @@ export function WhyCredits() {
                   <div className="flex items-center gap-3">
                     <Repeat className="w-5 h-5 text-brand-primary animate-spin-slow" />
                     <span className="text-sm font-black uppercase tracking-[0.2em] text-white">
-                      Value Swap
+                      Skills Exchange
                     </span>
                   </div>
                 </div>
