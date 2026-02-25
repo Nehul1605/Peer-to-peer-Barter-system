@@ -81,19 +81,19 @@ export function CTASection() {
             initial={{ opacity: 0, y: 20 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.3 }}
-            className="text-4xl md:text-7xl mb-6 bg-gradient-to-r from-white via-white/80 to-brand-primary bg-clip-text text-transparent"
-            style={{ fontWeight: 800, lineHeight: 1.1 }}
+            className="text-5xl md:text-8xl mb-12 text-white tracking-tighter font-black"
           >
-            Start Your
-            <br />
-            Skill Journey Today
+            Ready to Start Your{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-blue-400">
+              Skill Journey?
+            </span>
           </motion.h2>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.4 }}
-            className="text-xl text-neutral-400 mb-12 max-w-2xl mx-auto"
+            className="text-xl md:text-2xl text-neutral-400 mb-12 max-w-2xl mx-auto font-medium"
           >
             Sign up today and get 50 bonus credits to jumpstart your learning
             adventure. No credit card required.

@@ -1,6 +1,92 @@
 import { motion } from "motion/react";
+import { useState, useRef } from "react";
 import { useInView } from "./useInView";
-import { ArrowRight, Users, Repeat, TrendingUp } from "lucide-react";
+import {
+  ArrowRight,
+  Users,
+  Repeat,
+  Sparkles,
+  Coins,
+  Scale,
+  Infinity as InfinityIcon,
+  CheckCircle2,
+} from "lucide-react";
+
+function BenefitCard({
+  benefit,
+  index,
+  inView,
+}: {
+  benefit: any;
+  index: number;
+  inView: boolean;
+}) {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isHovering, setIsHovering] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    setMousePosition({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    });
+  };
+
+  return (
+    <motion.div
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
+      initial={{ opacity: 0, y: 30 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.6, delay: 0.4 + index * 0.1 }}
+      whileHover={{ y: -10, scale: 1.02 }}
+      className="relative group cursor-default"
+    >
+      <div className="glass-strong rounded-3xl p-8 h-full border border-white/5 bg-neutral-900/40 relative overflow-hidden transition-all duration-500 group-hover:border-white/20 group-hover:bg-neutral-900/60 shadow-2xl">
+        {/* Spotlight Effect */}
+        <div
+          className="pointer-events-none absolute -inset-px transition-opacity duration-300"
+          style={{
+            opacity: isHovering ? 1 : 0,
+            background: `radial-gradient(400px circle at ${mousePosition.x}px ${mousePosition.y}px, ${benefit.glow}, transparent 40%)`,
+          }}
+        />
+
+        <div className="relative z-10">
+          <motion.div
+            whileHover={{ rotate: 360, scale: 1.1 }}
+            transition={{
+              rotate: { duration: 1.5, ease: "easeInOut" },
+              scale: { type: "spring", stiffness: 300, damping: 20 },
+            }}
+            className={`w-16 h-16 rounded-2xl bg-white/5 ${benefit.color} flex items-center justify-center mb-6 group-hover:bg-white/10 transition-all duration-300 shadow-lg shadow-black/20`}
+          >
+            <benefit.icon className="w-8 h-8" />
+          </motion.div>
+
+          <h3 className="text-2xl text-white font-bold mb-3 group-hover:text-brand-primary transition-colors">
+            {benefit.title}
+          </h3>
+
+          <p className="text-neutral-400 text-base leading-relaxed font-medium">
+            {benefit.description}
+          </p>
+
+          <div className="mt-8 pt-6 border-t border-white/5 flex items-center gap-2">
+            <CheckCircle2 className={`w-4 h-4 ${benefit.color} opacity-50`} />
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-500">
+              Verified System Benefit
+            </span>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
 
 export function WhyCredits() {
   const { ref, inView } = useInView();
@@ -17,136 +103,146 @@ export function WhyCredits() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          transition={{ duration: 0.8 }}
+          className="text-center mb-20"
         >
-          <div className="inline-block px-4 py-1.5 mb-4 rounded-full border border-brand-primary/20 bg-brand-primary/5">
-            <span className="text-brand-primary text-sm font-semibold tracking-wider uppercase">
+          <div className="inline-flex items-center gap-2 px-4 py-2 mb-6 rounded-full border border-brand-primary/20 bg-brand-primary/5">
+            <Sparkles className="w-4 h-4 text-brand-primary" />
+            <span className="text-brand-primary text-xs font-black tracking-widest uppercase">
               Value System
             </span>
           </div>
-          <h2
-            className="text-4xl md:text-5xl mb-4 text-white"
-            style={{ fontWeight: 700 }}
-          >
-            Why Credits Work
+          <h2 className="text-5xl md:text-7xl mb-6 text-white tracking-tighter font-black">
+            Why Credits{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-blue-400">
+              Work.
+            </span>
           </h2>
-          <p className="text-xl text-neutral-400 max-w-2xl mx-auto">
-            A fair, decentralized economy built on mutual value exchange
+          <p className="text-xl text-neutral-400 max-w-2xl mx-auto font-medium leading-relaxed">
+            A fair, decentralized economy built on mutual value exchange and
+            shared knowledge.
           </p>
         </motion.div>
 
         <div className="max-w-5xl mx-auto">
           {/* Credit flow diagram */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
+            initial={{ opacity: 0, scale: 0.95 }}
             animate={inView ? { opacity: 1, scale: 1 } : {}}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="glass-strong rounded-3xl p-8 md:p-12 mb-12 border border-white/5 bg-neutral-900/40"
+            className="glass-strong rounded-[40px] p-8 md:p-16 mb-16 border border-white/10 bg-neutral-900/60 relative overflow-hidden shadow-2xl"
           >
-            <div className="grid md:grid-cols-3 gap-8 items-center">
+            {/* Background elements for the diagram */}
+            <div className="absolute top-0 left-0 w-full h-full opacity-30 pointer-events-none">
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-brand-primary to-transparent" />
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-12 items-center relative z-10">
               {/* Student A */}
               <motion.div
-                animate={inView ? { scale: [1, 1.05, 1] } : {}}
-                transition={{ duration: 2, repeat: Infinity, delay: 0 }}
-                className="text-center"
+                animate={inView ? { y: [0, -10, 0] } : {}}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+                className="text-center group"
               >
-                <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-brand-primary to-brand-primary/40 flex items-center justify-center mb-4 shadow-lg shadow-brand-primary/20">
-                  <Users className="w-12 h-12 text-background" />
+                <div className="relative inline-block mb-6">
+                  <div className="absolute inset-0 bg-brand-primary/20 blur-2xl rounded-full scale-150 group-hover:bg-brand-primary/40 transition-colors duration-500" />
+                  <div className="w-32 h-32 mx-auto rounded-3xl bg-gradient-to-br from-brand-primary to-blue-600 flex items-center justify-center relative z-10 shadow-2xl rotate-3 group-hover:rotate-0 transition-all duration-500">
+                    <Users className="w-16 h-16 text-neutral-950" />
+                  </div>
                 </div>
-                <div className="text-white mb-2 font-bold">Student A</div>
-                <div className="text-sm text-neutral-400">Teaches: Web Dev</div>
-                <div className="text-sm text-brand-primary font-bold mt-2">
-                  + 25 credits
+                <div className="text-white text-2xl font-black tracking-tight mb-1">
+                  Student A
+                </div>
+                <div className="text-sm font-bold uppercase tracking-widest text-brand-primary mb-3">
+                  Professional Dev
+                </div>
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-white/5 border border-white/10">
+                  <span className="text-brand-primary font-black">
+                    + 25 CREDITS
+                  </span>
                 </div>
               </motion.div>
 
-              {/* Arrow */}
-              <div className="flex justify-center">
-                <motion.div
-                  animate={{ x: [0, 10, 0] }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
-                >
-                  <ArrowRight className="w-12 h-12 text-brand-primary opacity-50" />
-                </motion.div>
+              {/* Central Exchange Logic */}
+              <div className="flex flex-col items-center justify-center gap-6">
+                <div className="flex items-center justify-center w-full">
+                  <motion.div
+                    animate={{ x: [0, 20, 0], opacity: [0.3, 1, 0.3] }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                  >
+                    <ArrowRight className="w-16 h-16 text-brand-primary" />
+                  </motion.div>
+                </div>
+                <div className="px-6 py-3 rounded-2xl bg-neutral-950/80 border border-white/5 backdrop-blur-xl">
+                  <div className="flex items-center gap-3">
+                    <Repeat className="w-5 h-5 text-brand-primary animate-spin-slow" />
+                    <span className="text-sm font-black uppercase tracking-[0.2em] text-white">
+                      Value Swap
+                    </span>
+                  </div>
+                </div>
+                <div className="flex items-center justify-center w-full">
+                  <motion.div
+                    animate={{ x: [0, -20, 0], opacity: [0.3, 1, 0.3] }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                      delay: 1,
+                    }}
+                  >
+                    <ArrowRight className="w-16 h-16 text-brand-secondary rotate-180" />
+                  </motion.div>
+                </div>
               </div>
 
               {/* Student B */}
               <motion.div
-                animate={inView ? { scale: [1, 1.05, 1] } : {}}
-                transition={{ duration: 2, repeat: Infinity, delay: 1 }}
-                className="text-center"
+                animate={inView ? { y: [0, 10, 0] } : {}}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: 1,
+                }}
+                className="text-center group"
               >
-                <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-brand-secondary to-brand-secondary/40 flex items-center justify-center mb-4 shadow-lg shadow-brand-secondary/20">
-                  <Users className="w-12 h-12 text-background" />
+                <div className="relative inline-block mb-6">
+                  <div className="absolute inset-0 bg-brand-secondary/20 blur-2xl rounded-full scale-150 group-hover:bg-brand-secondary/40 transition-colors duration-500" />
+                  <div className="w-32 h-32 mx-auto rounded-3xl bg-gradient-to-br from-brand-secondary to-purple-600 flex items-center justify-center relative z-10 shadow-2xl -rotate-3 group-hover:rotate-0 transition-all duration-500">
+                    <Users className="w-16 h-16 text-neutral-950" />
+                  </div>
                 </div>
-                <div className="text-white mb-2 font-bold">Student B</div>
-                <div className="text-sm text-neutral-400">Learns: Web Dev</div>
-                <div className="text-sm text-brand-secondary font-bold mt-2">
-                  - 25 credits
+                <div className="text-white text-2xl font-black tracking-tight mb-1">
+                  Student B
+                </div>
+                <div className="text-sm font-bold uppercase tracking-widest text-brand-secondary mb-3">
+                  Creative Designer
+                </div>
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-white/5 border border-white/10">
+                  <span className="text-brand-secondary font-black">
+                    - 25 CREDITS
+                  </span>
                 </div>
               </motion.div>
             </div>
 
-            <motion.div
-              initial={{ scaleX: 0 }}
-              animate={inView ? { scaleX: 1 } : {}}
-              transition={{ duration: 1, delay: 0.5 }}
-              className="h-px bg-gradient-to-r from-transparent via-brand-primary/30 to-transparent my-8 origin-center"
-            />
-
-            {/* Reverse flow */}
-            <div className="grid md:grid-cols-3 gap-8 items-center">
-              {/* Student B (now teaching) */}
-              <motion.div
-                animate={inView ? { scale: [1, 1.05, 1] } : {}}
-                transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
-                className="text-center"
-              >
-                <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-brand-secondary to-brand-secondary/40 flex items-center justify-center mb-4 shadow-lg shadow-brand-secondary/20">
-                  <Users className="w-12 h-12 text-background" />
-                </div>
-                <div className="text-white mb-2 font-bold">Student B</div>
-                <div className="text-sm text-neutral-400">Teaches: Design</div>
-                <div className="text-sm text-brand-secondary font-bold mt-2">
-                  + 25 credits
-                </div>
-              </motion.div>
-
-              {/* Arrow */}
-              <div className="flex justify-center">
-                <motion.div
-                  animate={{ x: [0, -10, 0] }}
-                  transition={{ duration: 1.5, repeat: Infinity, delay: 0.5 }}
-                >
-                  <ArrowRight className="w-12 h-12 text-brand-secondary opacity-50 rotate-180" />
-                </motion.div>
-              </div>
-
-              {/* Student A (now learning) */}
-              <motion.div
-                animate={inView ? { scale: [1, 1.05, 1] } : {}}
-                transition={{ duration: 2, repeat: Infinity, delay: 1.5 }}
-                className="text-center"
-              >
-                <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-brand-primary to-brand-primary/40 flex items-center justify-center mb-4 shadow-lg shadow-brand-primary/20">
-                  <Users className="w-12 h-12 text-background" />
-                </div>
-                <div className="text-white mb-2 font-bold">Student A</div>
-                <div className="text-sm text-neutral-400">Learns: Design</div>
-                <div className="text-sm text-brand-primary font-bold mt-2">
-                  - 25 credits
-                </div>
-              </motion.div>
-            </div>
-
-            <div className="text-center mt-10 flex items-center justify-center gap-3 text-brand-primary">
-              <div className="h-px w-8 bg-brand-primary/20" />
-              <Repeat className="w-5 h-5 animate-spin-slow" />
-              <span className="text-sm font-bold uppercase tracking-widest">
-                Continuous Value Exchange
-              </span>
-              <div className="h-px w-8 bg-brand-primary/20" />
+            {/* Subtext info */}
+            <div className="mt-16 pt-8 border-t border-white/5 text-center">
+              <p className="text-neutral-500 text-sm font-medium max-w-lg mx-auto leading-relaxed">
+                In this ecosystem, <span className="text-white">Student A</span>{" "}
+                earns credits by sharing expertise, which they then use to learn
+                from <span className="text-white">Student B</span>. No cash,
+                just knowledge.
+              </p>
             </div>
           </motion.div>
 
@@ -154,42 +250,36 @@ export function WhyCredits() {
           <div className="grid md:grid-cols-3 gap-6">
             {[
               {
-                icon: "💰",
+                icon: Coins,
                 title: "No Money Required",
-                description: "Learn premium skills without spending real money",
-                color: "brand-primary",
+                description:
+                  "Learn premium skills without spending real money. Use your expertise as currency.",
+                color: "text-amber-400",
+                glow: "rgba(251, 191, 36, 0.15)",
               },
               {
-                icon: "⚖️",
+                icon: Scale,
                 title: "Fair Exchange",
-                description: "Everyone's knowledge has equal value in credits",
-                color: "brand-secondary",
+                description:
+                  "Everyone's knowledge has equal value. Credits ensure a balanced ecosystem for all.",
+                color: "text-blue-400",
+                glow: "rgba(96, 165, 250, 0.15)",
               },
               {
-                icon: "🔄",
+                icon: InfinityIcon,
                 title: "Self-Sustaining",
                 description:
-                  "Teach to earn, learn to grow - the cycle continues",
-                color: "brand-primary",
+                  "Teach to earn, learn to grow - a limitless cycle of knowledge sharing and community.",
+                color: "text-purple-400",
+                glow: "rgba(192, 132, 252, 0.15)",
               },
             ].map((benefit, idx) => (
-              <motion.div
+              <BenefitCard
                 key={idx}
-                initial={{ opacity: 0, y: 20 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.6, delay: 0.4 + idx * 0.1 }}
-                className="glass rounded-2xl p-6 border border-white/5 bg-neutral-900/40 hover:bg-neutral-900 transition-all duration-300 group hover:border-brand-primary/20"
-              >
-                <div className="text-4xl mb-4 group-hover:scale-110 transition-transform inline-block drop-shadow-xl">
-                  {benefit.icon}
-                </div>
-                <h3 className="text-xl text-white mb-2 font-bold">
-                  {benefit.title}
-                </h3>
-                <p className="text-neutral-400 text-sm leading-relaxed">
-                  {benefit.description}
-                </p>
-              </motion.div>
+                benefit={benefit}
+                index={idx}
+                inView={inView}
+              />
             ))}
           </div>
         </div>
