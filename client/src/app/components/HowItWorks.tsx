@@ -115,68 +115,6 @@ function StepCard({
           </div>
         </div>
       </div>
-
-      {/* Animated Connecting Line */}
-      {index < 2 && (
-        <>
-          {/* Desktop Horizontal Line */}
-          <div className="hidden lg:block absolute top-1/2 -right-[25%] w-[50%] h-[2px] z-0 overflow-visible -translate-y-1/2 pointer-events-none">
-            <div className="w-full h-full bg-gradient-to-r from-transparent via-brand-primary/40 to-transparent relative">
-              <motion.div
-                animate={{
-                  left: ["-10%", "110%"],
-                  opacity: [0, 1, 1, 0],
-                }}
-                transition={{
-                  duration: 1,
-                  repeat: Infinity,
-                  ease: "linear",
-                }}
-                className="absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-brand-primary blur-[4px] shadow-[0_0_15px_#6366f1,0_0_30px_#6366f1]"
-              />
-              <motion.div
-                animate={{
-                  left: ["-10%", "110%"],
-                }}
-                transition={{
-                  duration: 2.5,
-                  repeat: Infinity,
-                  ease: "linear",
-                }}
-                className="absolute top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-white z-0"
-              />
-            </div>
-          </div>
-          {/* Mobile Vertical Line */}
-          <div className="lg:hidden absolute left-1/2 -bottom-[20%] w-[2px] h-[40%] z-0 -translate-x-1/2 overflow-visible pointer-events-none">
-            <div className="w-full h-full bg-gradient-to-b from-transparent via-brand-primary/40 to-transparent relative">
-              <motion.div
-                animate={{
-                  top: ["-10%", "110%"],
-                  opacity: [0, 1, 1, 0],
-                }}
-                transition={{
-                  duration: 2.5,
-                  repeat: Infinity,
-                  ease: "linear",
-                }}
-                className="absolute left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-brand-primary blur-[4px] shadow-[0_0_15px_#6366f1,0_0_30px_#6366f1]"
-              />
-              <motion.div
-                animate={{
-                  top: ["-10%", "110%"],
-                }}
-                transition={{
-                  duration: 2.5,
-                  repeat: Infinity,
-                  ease: "linear",
-                }}
-                className="absolute left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-white z-0"
-              />
-            </div>
-          </div>
-        </>
-      )}
     </motion.div>
   );
 }
