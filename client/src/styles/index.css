@@ -70,11 +70,12 @@ body {
 }
 
 .glass-strong {
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  transform: translateZ(0);
+  background: rgba(0, 0, 0, 0.4); /* Reduced opacity for better visibility */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px); /* Vital for Safari/iOS */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05); /* Matching landing page */
+  transform: translateZ(0); /* Force GPU acceleration */
+  isolation: isolate; /* Improve rendering stability */
 }
 
 /* Smooth scrolling */
