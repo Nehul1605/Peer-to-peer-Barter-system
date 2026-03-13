@@ -9,7 +9,7 @@ import { CTASection } from "../components/CTASection";
 import { Footer } from "../components/Footer";
 
 /**
- * SkillBarter Landing Page
+ * SkillSwap Landing Page
  * A modern, premium animated landing page for a P2P skill exchange platform
  */
 export default function LandingPage() {

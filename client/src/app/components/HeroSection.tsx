@@ -87,7 +87,7 @@ export function HeroSection() {
               transition={{ delay: 0.4 }}
               className="text-lg md:text-xl text-neutral-400 mb-8 max-w-2xl mx-auto lg:mx-0"
             >
-              Join SkillBarter - the revolutionary platform where students teach
+              Join SkillSwap - the revolutionary platform where students teach
               what they know, earn credits, and unlock unlimited learning
               opportunities through our credit-based barter system.
             </motion.p>

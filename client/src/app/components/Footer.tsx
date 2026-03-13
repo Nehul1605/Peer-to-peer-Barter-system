@@ -8,12 +8,12 @@ export function Footer() {
         <div className="grid md:grid-cols-4 gap-12 mb-12">
           {/* Brand */}
           <div className="col-span-1 md:col-span-1">
-            <div
-              className="text-2xl mb-6 bg-gradient-to-r from-brand-primary to-brand-secondary bg-clip-text text-transparent"
-              style={{ fontWeight: 800 }}
-            >
-              SkillBarter
-            </div>
+            <Link to="/" className="inline-flex items-center gap-3 mb-6 group">
+              <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/10 group-hover:border-brand-primary/30 transition-all">
+                <img src="/favicon.svg" alt="SkillSwap" className="w-6 h-6" />
+              </div>
+              <span className="text-xl font-bold tracking-tight text-white">SkillSwap</span>
+            </Link>
             <p className="text-neutral-400 text-sm leading-relaxed max-w-xs">
               Empowering students to exchange skills and unlock unlimited
               learning opportunities through fair credit exchange.
@@ -117,7 +117,7 @@ export function Footer() {
         {/* Bottom */}
         <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
           <p className="text-sm text-neutral-500 font-medium">
-            © {new Date().getFullYear()} SkillBarter. All rights reserved.
+            © {new Date().getFullYear()} SkillSwap. All rights reserved.
           </p>
           <p className="text-sm text-neutral-500 font-medium flex items-center gap-2">
             Build with{" "}

@@ -19,7 +19,7 @@ const faqs = [
   {
     question: "Is it really free?",
     answer:
-      "Yes, SkillBarter is 100% free. Our protocol ensures value retention for the community without transaction fees. We believe knowledge should be accessible to all students.",
+      "Yes, SkillSwap is 100% free. Our protocol ensures value retention for the community without transaction fees. We believe knowledge should be accessible to all students.",
     icon: HelpCircle,
   },
   {
@@ -56,7 +56,7 @@ export default function HelpCenter() {
           </h1>
 
           <p className="text-xl text-neutral-400 mb-16 leading-relaxed">
-            Everything you need to know about the SkillBarter ecosystem. Can't
+            Everything you need to know about the SkillSwap ecosystem. Can't
             find what you're looking for? Reach out to our community support.
           </p>
 

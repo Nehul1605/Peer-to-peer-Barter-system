@@ -25,7 +25,7 @@ import MeetingRoom from "./pages/dashboard/MeetingRoom";
 import SessionReview from "./pages/dashboard/SessionReview";
 
 /**
- * SkillBarter - Peer-to-Peer Skill Exchange Platform
+ * SkillSwap - Peer-to-Peer Skill Exchange Platform
  *
  * Main application with routing for:
  * - Landing page

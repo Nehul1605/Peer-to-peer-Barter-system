@@ -79,7 +79,7 @@ const updateSessionStatus = asyncHandler(async (req, res) => {
 
     if (status === 'SCHEDULED' && session.status !== 'SCHEDULED' && !session.meetingLink) {
         // Use Jitsi for instant, free meeting links without API setup
-        session.meetingLink = `https://meet.jit.si/SkillBarter-${session.id}`;
+        session.meetingLink = `https://meet.jit.si/SkillSwap-${session.id}`;
     }
 
     session.status = status;
@@ -141,7 +141,7 @@ const generateJitsiToken = asyncHandler(async (req, res) => {
     const nbf = Math.round(now.getTime() / 1000) - 10;
 
     // Base room name (without tenant prefix)
-    const rawRoomName = `SkillBarter-${sessionId}`;
+    const rawRoomName = `SkillSwap-${sessionId}`;
     
     // For JaaS, the payload must be carefully structured
     const payload = {
