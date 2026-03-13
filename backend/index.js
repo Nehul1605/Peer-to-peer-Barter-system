@@ -37,7 +37,7 @@ app.use('/api/skills', skillRoutes);
 app.use('/api/sessions', sessionRoutes);
 
 app.get('/', (req, res) => {
-  res.send('SkillBarter API is running');
+  res.send('SkillSwap API is running');
 });
 
 // Global Error Handler

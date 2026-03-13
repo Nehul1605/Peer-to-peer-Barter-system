@@ -30,7 +30,7 @@ export default function MeetingRoom() {
            setSession(foundSession);
            
            // Set default room name
-           let finalRoomName = `SkillBarter-${sessionId}`;
+           let finalRoomName = `SkillSwap-${sessionId}`;
            
            // Try to get JaaS token if configured
            try {

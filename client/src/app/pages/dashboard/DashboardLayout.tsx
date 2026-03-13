@@ -38,10 +38,12 @@ export default function DashboardLayout() {
       <aside className="hidden lg:flex flex-col w-64 bg-sidebar/50 backdrop-blur-xl border-r border-sidebar-border h-screen sticky top-0">
         {/* Logo */}
         <div className="p-6 border-b border-sidebar-border">
-          <Link to="/" className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-            SkillBarter
+          <Link to="/" className="flex items-center gap-3 group">
+             <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/20 group-hover:border-primary/50 transition-colors">
+               <img src="/favicon.svg" alt="SkillSwap" className="w-6 h-6" />
+             </div>
+             <span className="text-xl font-bold tracking-tight text-foreground">SkillSwap</span>
           </Link>
-          <p className="text-sm text-muted-foreground mt-1">Exchange & Learn</p>
         </div>
 
         {/* Navigation */}
@@ -97,7 +99,7 @@ export default function DashboardLayout() {
           <div className="lg:hidden sticky top-0 z-50 bg-background/95 backdrop-blur-xl border-b border-border">
             <div className="flex items-center justify-between p-4">
               <Link to="/" className="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                SkillBarter
+                SkillSwap
               </Link>
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}

@@ -48,15 +48,17 @@ export default function LoginPage() {
         transition={{ duration: 0.5 }}
         className="relative z-10 w-full max-w-md"
       >
-        <Link to="/" className="block mb-8 text-center group">
-          <motion.h1
-            whileHover={{ scale: 1.05 }}
-            className="text-4xl font-black bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent tracking-tighter italic"
-          >
-            SkillBarter
-          </motion.h1>
+        <Link to="/" className="flex flex-col items-center gap-4 mb-8 group">
+           <motion.div 
+             whileHover={{ scale: 1.05, rotate: 5 }}
+             className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center backdrop-blur-xl shadow-2xl relative overflow-hidden"
+           >
+             <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+             <img src="/favicon.svg" alt="SkillSwap" className="w-10 h-10 relative z-10" />
+           </motion.div>
+           <span className="text-2xl font-bold tracking-tight text-white/90">SkillSwap</span>
         </Link>
-
+        
         <div className="glass-strong rounded-[40px] p-10 border border-border bg-card/50 shadow-2xl relative overflow-hidden">
           {/* Decorative Spotlight */}
           <div className="absolute -top-20 -right-20 w-40 h-40 bg-primary/5 rounded-full blur-3xl" />

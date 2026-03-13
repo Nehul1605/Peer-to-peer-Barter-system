@@ -13,17 +13,18 @@ export function Navbar() {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.6 }}
-      className="fixed top-0 left-0 right-0 z-[100] glass-strong border-b border-white/5"
+      className="fixed top-0 left-0 right-0 z-[100] glass-strong"
     >
       <div className="container mx-auto px-6">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link
-            to="/"
-            className="text-2xl bg-gradient-to-r from-brand-primary to-brand-secondary bg-clip-text text-transparent"
-            style={{ fontWeight: 700 }}
-          >
-            SkillBarter
+          <Link to="/" className="flex items-center gap-4 group">
+            <div className="relative flex items-center justify-center w-12 h-12 rounded-xl bg-white/5 group-hover:bg-brand-primary/10 transition-all duration-300">
+              <img src="/favicon.svg" alt="SkillSwap Logo" className="w-8 h-8 object-contain" />
+            </div>
+            <span className="text-2xl font-bold tracking-tight text-white/90 group-hover:text-white transition-colors duration-300">
+              SkillSwap
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
