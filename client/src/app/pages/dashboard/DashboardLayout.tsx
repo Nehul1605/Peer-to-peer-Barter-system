@@ -33,15 +33,15 @@ export default function DashboardLayout() {
   ];
 
   return (
-    <div className="min-h-screen bg-[var(--background)] text-white flex">
+    <div className="min-h-screen bg-background text-foreground flex">
       {/* Sidebar - Desktop */}
-      <aside className="hidden lg:flex flex-col w-64 bg-neutral-900/40 backdrop-blur-xl border-r border-neutral-800 h-screen sticky top-0">
+      <aside className="hidden lg:flex flex-col w-64 bg-sidebar/50 backdrop-blur-xl border-r border-sidebar-border h-screen sticky top-0">
         {/* Logo */}
-        <div className="p-6 border-b border-neutral-800">
-          <Link to="/" className="text-2xl font-bold bg-gradient-to-r from-brand-primary to-brand-secondary bg-clip-text text-transparent">
+        <div className="p-6 border-b border-sidebar-border">
+          <Link to="/" className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
             SkillBarter
           </Link>
-          <p className="text-sm text-neutral-400 mt-1">Exchange & Learn</p>
+          <p className="text-sm text-muted-foreground mt-1">Exchange & Learn</p>
         </div>
 
         {/* Navigation */}
@@ -56,8 +56,8 @@ export default function DashboardLayout() {
                 to={item.path}
                 className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
                   isActive
-                    ? 'bg-gradient-to-r from-brand-primary/20 to-brand-secondary/20 text-white border border-brand-primary/30'
-                    : 'text-neutral-400 hover:text-white hover:bg-neutral-900/40'
+                    ? 'bg-sidebar-accent/10 text-primary border border-primary/20'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-sidebar-accent/5'
                 }`}
               >
                 <Icon className="w-5 h-5" />
@@ -68,22 +68,22 @@ export default function DashboardLayout() {
         </nav>
 
         {/* User Info & Logout */}
-        <div className="p-4 border-t border-neutral-800">
-          <div className="bg-neutral-900/40 rounded-lg p-3 mb-3">
+        <div className="p-4 border-t border-sidebar-border">
+          <div className="bg-sidebar-accent/5 rounded-lg p-3 mb-3">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-r from-brand-primary to-brand-secondary flex items-center justify-center text-lg font-bold">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center text-lg font-bold text-primary-foreground">
                 {user?.name?.charAt(0) || <User className="w-5 h-5" />}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate">{user?.name || 'User'}</p>
-                <p className="text-xs text-neutral-400 truncate">{user?.email || ''}</p>
+                <p className="text-sm font-medium truncate text-foreground">{user?.name || 'User'}</p>
+                <p className="text-xs text-muted-foreground truncate">{user?.email || ''}</p>
               </div>
             </div>
           </div>
           <Button
             onClick={handleLogout}
             variant="ghost"
-            className="w-full justify-start text-neutral-400 hover:text-white hover:bg-neutral-900/40"
+            className="w-full justify-start text-muted-foreground hover:text-foreground hover:bg-sidebar-accent/5"
           >
             <LogOut className="w-5 h-5 mr-3" />
             Logout
@@ -94,9 +94,9 @@ export default function DashboardLayout() {
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-h-screen">
           {/* Mobile Header */}
-          <div className="lg:hidden sticky top-0 z-50 bg-[var(--background)]/95 backdrop-blur-xl border-b border-neutral-800">
+          <div className="lg:hidden sticky top-0 z-50 bg-background/95 backdrop-blur-xl border-b border-border">
             <div className="flex items-center justify-between p-4">
-              <Link to="/" className="text-xl font-bold bg-gradient-to-r from-brand-primary to-brand-secondary bg-clip-text text-transparent">
+              <Link to="/" className="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
                 SkillBarter
               </Link>
               <button
