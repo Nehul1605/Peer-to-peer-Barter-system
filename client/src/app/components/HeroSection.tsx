@@ -19,7 +19,7 @@ export function HeroSection() {
             }}
             animate={{
               y: [0, -30, 0],
-              opacity: [0.2, 0.8, 0.2],
+              opacity: [0.1, 0.3, 0.1],
               scale: [1, 1.5, 1],
             }}
             transition={{
@@ -87,9 +87,7 @@ export function HeroSection() {
               transition={{ delay: 0.4 }}
               className="text-lg md:text-xl text-neutral-400 mb-8 max-w-2xl mx-auto lg:mx-0"
             >
-              Join SkillSwap - the revolutionary platform where students teach
-              what they know, earn credits, and unlock unlimited learning
-              opportunities through our credit-based barter system.
+              Students teach skills, earn credits, and spend them to learn from others.
             </motion.p>
 
             <motion.div
@@ -116,7 +114,7 @@ export function HeroSection() {
                   className="px-8 py-4 rounded-xl border border-neutral-800 text-white hover:bg-neutral-900/40 transition-all duration-300 hover:border-brand-primary/50"
                   style={{ fontWeight: 600 }}
                 >
-                  Explore Skills
+                  Find a Teacher
                 </button>
               </Link>
             </motion.div>
