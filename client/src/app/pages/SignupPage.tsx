@@ -29,11 +29,12 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Background patterns matching landing page */}
-      <div className="absolute inset-0 opacity-20 pointer-events-none">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] animate-pulse" />
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-secondary/10 rounded-full blur-[120px] animate-pulse delay-1000" />
+    <div className="min-h-screen bg-black text-white flex items-center justify-center p-4 relative overflow-hidden font-sans">
+      
+      <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:50px_50px] [mask-image:radial-gradient(ellipse_at_center,black,transparent_80%)]" />
+          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[120px]" />
+          <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[120px]" />
       </div>
 
       <motion.div
@@ -44,43 +45,40 @@ export default function SignupPage() {
       >
         <Link to="/" className="flex flex-col items-center gap-4 mb-8 group">
            <motion.div 
-             whileHover={{ scale: 1.05, rotate: 5 }}
-             className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center backdrop-blur-xl shadow-2xl relative overflow-hidden"
+             whileHover={{ scale: 1.05 }}
+             className="w-16 h-16 rounded-2xl flex items-center justify-center relative overflow-hidden"
            >
-             <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-             <img src="/favicon.svg" alt="SkillSwap" className="w-10 h-10 relative z-10" />
+             <img src="/logo.svg" alt="SkillSwap" className="w-full h-full object-contain" />
            </motion.div>
-           <span className="text-2xl font-bold tracking-tight text-white/90">SkillSwap</span>
+           <span className="text-2xl font-medium tracking-tight text-white hover:text-neutral-200 transition-colors">SkillSwap</span>
         </Link>
 
-        <div className="glass-strong rounded-[40px] p-10 border border-border bg-card/50 shadow-2xl relative overflow-hidden">
-          {/* Decorative Spotlight */}
-          <div className="absolute -top-20 -right-20 w-40 h-40 bg-primary/10 rounded-full blur-3xl transition-all" />
-
-          <h2 className="text-3xl font-black mb-2 tracking-tight">
+        <div className="rounded-2xl border border-neutral-800 bg-[#0A0A0B] p-10 shadow-2xl relative overflow-hidden">
+          
+          <h2 className="text-3xl font-medium mb-2 tracking-tight text-white">
             Create Account
           </h2>
-          <p className="text-muted-foreground mb-8 font-medium italic">
-            Join the community of skill swappers
+          <p className="text-neutral-400 mb-8 font-light text-sm">
+            Join the community of skill swappers today
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
               <Label
                 htmlFor="name"
-                className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground ml-1"
+                className="text-white text-sm font-medium"
               >
-                Your Name
+                Full Name
               </Label>
               <div className="relative group/input">
-                <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground group-focus-within/input:text-primary transition-colors" />
+                <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-500 group-focus-within/input:text-white transition-colors" />
                 <Input
                   id="name"
                   type="text"
                   placeholder="John Doe"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="pl-12 h-14 bg-background/50 border-input text-foreground placeholder:text-muted-foreground/50 rounded-2xl focus:border-primary/50 focus:ring-primary/20 transition-all font-medium"
+                  className="pl-12 h-12 bg-[#1A1A1C] border-neutral-800 text-white placeholder:text-neutral-600 rounded-lg focus:border-blue-500 focus:ring-blue-500/20 transition-all"
                   required
                 />
               </div>
@@ -89,19 +87,19 @@ export default function SignupPage() {
             <div className="space-y-2">
               <Label
                 htmlFor="email"
-                className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground ml-1"
+                className="text-white text-sm font-medium"
               >
                 Email Address
               </Label>
               <div className="relative group/input">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground group-focus-within/input:text-primary transition-colors" />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-500 group-focus-within/input:text-white transition-colors" />
                 <Input
                   id="email"
                   type="email"
-                  placeholder="you@example.com"
+                  placeholder="name@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="pl-12 h-14 bg-background/50 border-input text-foreground placeholder:text-muted-foreground/50 rounded-2xl focus:border-primary/50 focus:ring-primary/20 transition-all font-medium"
+                  className="pl-12 h-12 bg-[#1A1A1C] border-neutral-800 text-white placeholder:text-neutral-600 rounded-lg focus:border-blue-500 focus:ring-blue-500/20 transition-all"
                   required
                 />
               </div>
@@ -110,19 +108,19 @@ export default function SignupPage() {
             <div className="space-y-2">
               <Label
                 htmlFor="password"
-                className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground ml-1"
+                className="text-white text-sm font-medium"
               >
-                Secure Password
+                Password
               </Label>
               <div className="relative group/input">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground group-focus-within/input:text-primary transition-colors" />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-500 group-focus-within/input:text-white transition-colors" />
                 <Input
                   id="password"
                   type="password"
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="pl-12 h-14 bg-background/50 border-input text-foreground placeholder:text-muted-foreground/50 rounded-2xl focus:border-primary/50 focus:ring-primary/20 transition-all font-medium"
+                  className="pl-12 h-12 bg-[#1A1A1C] border-neutral-800 text-white placeholder:text-neutral-600 rounded-lg focus:border-blue-500 focus:ring-blue-500/20 transition-all"
                   required
                 />
               </div>
@@ -130,30 +128,26 @@ export default function SignupPage() {
 
             <Button
               type="submit"
+              className="w-full h-12 bg-white text-black hover:bg-neutral-200 font-medium rounded-full shadow-lg shadow-white/10 transition-all text-sm"
               disabled={loading}
-              className="w-full h-14 bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase tracking-widest rounded-2xl transition-all duration-300 shadow-xl shadow-primary/20 group mt-4 flex items-center justify-center gap-2"
             >
               {loading ? (
-                <>
-                  <span className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
-                  Creating...
-                </>
+                <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
               ) : (
-                <>
-                  Create Account
-                  <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </>
+                <span className="flex items-center justify-center gap-2">
+                  Create Account <ArrowRight className="w-4 h-4" />
+                </span>
               )}
             </Button>
           </form>
 
-          <p className="mt-8 text-center text-muted-foreground font-medium text-sm">
+          <p className="mt-8 text-center text-neutral-500 text-sm">
             Already have an account?{" "}
             <Link
               to="/login"
-              className="text-primary hover:text-primary/80 font-black transition-colors"
+              className="text-white hover:text-blue-400 font-medium transition-colors"
             >
-              Sign in
+              Log in
             </Link>
           </p>
         </div>
