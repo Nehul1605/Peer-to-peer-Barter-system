@@ -1,27 +1,21 @@
 import { Navbar } from "../components/Navbar";
 import { HeroSection } from "../components/HeroSection";
+import { BentoFeatures } from "../components/BentoFeatures";
+import { SmartMatching } from "../components/SmartMatching";
 import { HowItWorks } from "../components/HowItWorks";
-import { WhyCredits } from "../components/WhyCredits";
-import { Features } from "../components/Features";
-import { TechStack } from "../components/TechStack";
-import { Testimonials } from "../components/Testimonials";
 import { CTASection } from "../components/CTASection";
 import { Footer } from "../components/Footer";
 
-/**
- * SkillSwap Landing Page
- * A modern, premium animated landing page for a P2P skill exchange platform
- */
+
+
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
+    <div className="min-h-screen bg-black text-white overflow-x-hidden font-sans selection:bg-white/20">
       <Navbar />
       <HeroSection />
+      <BentoFeatures />
       <HowItWorks />
-      <WhyCredits />
-      <Features />
-      <TechStack />
-      <Testimonials />
+      <SmartMatching />
       <CTASection />
       <Footer />
     </div>

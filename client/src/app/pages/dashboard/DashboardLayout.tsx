@@ -39,8 +39,8 @@ export default function DashboardLayout() {
         {/* Logo */}
         <div className="p-6 border-b border-sidebar-border">
           <Link to="/" className="flex items-center gap-3 group">
-             <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/20 group-hover:border-primary/50 transition-colors">
-               <img src="/favicon.svg" alt="SkillSwap" className="w-6 h-6" />
+             <div className="w-10 h-10 rounded-lg flex items-center justify-center border border-primary/20 group-hover:border-primary/50 transition-colors">
+               <img src="/logo.svg" alt="SkillSwap" className="w-6 h-6 object-contain" />
              </div>
              <span className="text-xl font-bold tracking-tight text-foreground">SkillSwap</span>
           </Link>
