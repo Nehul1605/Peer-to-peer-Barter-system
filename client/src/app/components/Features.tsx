@@ -214,7 +214,7 @@ export function Features() {
           </div>
           <h2 className="text-5xl md:text-7xl mb-6 text-white tracking-tighter font-black">
             Platform{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-blue-400">
+            <span className="text-primary">
               Features.
             </span>
           </h2>
