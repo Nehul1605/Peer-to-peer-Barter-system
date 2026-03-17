@@ -1,143 +1,85 @@
-import { motion } from "motion/react";
+import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
 
 export function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
-  const { isAuthenticated } = useAuth();
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <motion.nav
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.6 }}
-      className="fixed top-0 left-0 right-0 z-[100] glass-strong"
-    >
-      <div className="container mx-auto px-6">
-        <div className="flex items-center justify-between h-20">
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-4 group">
-            <div className="relative flex items-center justify-center w-12 h-12 rounded-xl bg-white/5 group-hover:bg-brand-primary/10 transition-all duration-300">
-              <img src="/favicon.svg" alt="SkillSwap Logo" className="w-8 h-8 object-contain" />
+    <>
+      <nav 
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+            isScrolled ? "py-4 bg-black/80 backdrop-blur-md border-b border-white/5" : "py-6 bg-transparent"
+        }`}
+      >
+        <div className="container mx-auto px-6 max-w-7xl flex items-center justify-between">
+            {/* Logo */}
+            <Link to="/" className="flex items-center gap-2 hover:opacity-90 transition-opacity group">
+                <div className="w-8 h-8 relative flex items-center justify-center">
+                    <img src="/logo.svg" alt="SkillSwap" className="w-full h-full object-contain" />
+                </div>
+                <span className="font-semibold text-white text-lg tracking-tight">SkillSwap</span>
+            </Link>
+
+            {/* Desktop Links */}
+            <div className="hidden md:flex items-center gap-8">
+                <button 
+                    onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}
+                    className="text-sm font-medium text-neutral-400 hover:text-white transition-colors"
+                >
+                    How it works
+                </button>
+                <div className="w-px h-4 bg-white/10" />
+                <div className="flex items-center gap-4">
+                    <Link to="/login" className="text-sm font-medium text-neutral-400 hover:text-white transition-colors">
+                        Log in
+                    </Link>
+                    <Link to="/signup">
+                        <button className="h-9 px-5 rounded-full bg-white text-black text-sm font-medium hover:bg-neutral-200 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:shadow-[0_0_25px_rgba(255,255,255,0.5)]">
+                            Sign up
+                        </button>
+                    </Link>
+                </div>
             </div>
-            <span className="text-2xl font-bold tracking-tight text-white/90 group-hover:text-white transition-colors duration-300">
-              SkillSwap
-            </span>
-          </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8">
-            <a
-              href="#how-it-works"
-              className="text-neutral-300 hover:text-brand-primary transition-colors text-sm font-medium"
+            {/* Mobile Menu Button */}
+            <button 
+                className="md:hidden text-white p-2"
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
-              How it Works
-            </a>
-            <a
-              href="#features"
-              className="text-neutral-300 hover:text-brand-primary transition-colors text-sm font-medium"
-            >
-              Features
-            </a>
-            <a
-              href="#testimonials"
-              className="text-neutral-300 hover:text-brand-primary transition-colors text-sm font-medium"
-            >
-              Testimonials
-            </a>
-          </div>
-
-          {/* Desktop CTA */}
-          <div className="hidden md:flex items-center gap-4">
-            {isAuthenticated ? (
-               <Link
-                to="/dashboard"
-                className="px-5 py-2.5 bg-brand-primary rounded-lg text-neutral-950 hover:opacity-90 transition-all duration-300 shadow-lg shadow-brand-primary/20"
-                style={{ fontWeight: 700 }}
-              >
-                Go to Dashboard
-              </Link>
-            ) : (
-              <>
-                <Link
-                  to="/login"
-                  className="px-6 py-2 text-neutral-300 hover:text-white transition-colors text-sm font-semibold"
-                >
-                  Sign In
-                </Link>
-                <Link
-                  to="/signup"
-                  className="px-5 py-2.5 bg-brand-primary rounded-lg text-neutral-950 hover:opacity-90 transition-all duration-300 shadow-lg shadow-brand-primary/20"
-                  style={{ fontWeight: 700 }}
-                >
-                  Get Started
-                </Link>
-              </>
-            )}
-          </div>
-
-          {/* Mobile menu button */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden text-neutral-300 p-2"
-          >
-            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+                {isMobileMenuOpen ? <X /> : <Menu />}
+            </button>
         </div>
+      </nav>
 
-        {/* Mobile Navigation */}
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden pb-6"
-          >
-            <div className="flex flex-col gap-4">
-              <a
-                href="#how-it-works"
-                onClick={() => setIsOpen(false)}
-                className="text-neutral-300 hover:text-white transition-colors py-2"
-              >
-                How it Works
-              </a>
-              <a
-                href="#features"
-                onClick={() => setIsOpen(false)}
-                className="text-neutral-300 hover:text-white transition-colors py-2"
-              >
-                Features
-              </a>
-              <a
-                href="#testimonials"
-                onClick={() => setIsOpen(false)}
-                className="text-neutral-300 hover:text-white transition-colors py-2"
-              >
-                Testimonials
-              </a>
-              <div className="border-t border-neutral-800 pt-4 mt-2">
-                <Link
-                  to="/login"
-                  onClick={() => setIsOpen(false)}
-                  className="block w-full px-6 py-2 text-center text-neutral-300 hover:text-white transition-colors mb-2"
-                  style={{ fontWeight: 500 }}
+      {/* Mobile Menu */}
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 z-40 bg-black pt-24 px-6 md:hidden">
+            <div className="flex flex-col gap-6 text-xl">
+                 <button 
+                    onClick={() => {
+                        document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' });
+                        setIsMobileMenuOpen(false);
+                    }}
+                    className="text-left py-2 border-b border-white/10 text-neutral-400"
                 >
-                  Sign In
-                </Link>
-                <Link
-                  to="/signup"
-                  onClick={() => setIsOpen(false)}
-                  className="block w-full px-6 py-3 bg-brand-primary rounded-lg text-neutral-950 text-center font-bold"
-                >
-                  Get Started
-                </Link>
-              </div>
+                    How it works
+                </button>
+                <Link to="/login" className="py-2 border-b border-white/10 text-neutral-400">Log in</Link>
+                <Link to="/signup" className="py-2 text-white">Sign up</Link>
             </div>
-          </motion.div>
-        )}
-      </div>
-    </motion.nav>
+        </div>
+      )}
+    </>
   );
 }

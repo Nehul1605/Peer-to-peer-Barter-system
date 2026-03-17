@@ -1,129 +1,35 @@
-import { Github, Twitter, Linkedin, Mail } from "lucide-react";
+import React from "react";
 import { Link } from "react-router-dom";
+import { Twitter, Linkedin, Facebook, Github } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="bg-neutral-950 border-t border-white/5 py-16">
+    <footer className="bg-black border-t border-white/5 text-neutral-500 py-12 text-xs font-light tracking-wide">
       <div className="container mx-auto px-6">
-        <div className="grid md:grid-cols-4 gap-12 mb-12">
-          {/* Brand */}
-          <div className="col-span-1 md:col-span-1">
-            <Link to="/" className="inline-flex items-center gap-3 mb-6 group">
-              <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/10 group-hover:border-brand-primary/30 transition-all">
-                <img src="/favicon.svg" alt="SkillSwap" className="w-6 h-6" />
-              </div>
-              <span className="text-xl font-bold tracking-tight text-white">SkillSwap</span>
-            </Link>
-            <p className="text-neutral-400 text-sm leading-relaxed max-w-xs">
-              Empowering students to exchange skills and unlock unlimited
-              learning opportunities through fair credit exchange.
-            </p>
-          </div>
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-16 border-b border-white/5 pb-12">
+           <div className="text-white font-medium text-lg">
+              © 2026 SkillSwap Inc.
+           </div>
+           
+           <div className="flex gap-8 flex-wrap text-neutral-400">
+              <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
+              <a href="#" className="hover:text-white transition-colors">Terms of Use</a>
+           </div>
 
-          {/* Platform */}
-          <div>
-            <h4 className="text-white mb-6 font-bold uppercase tracking-widest text-xs">
-              Platform
-            </h4>
-            <ul className="space-y-3 text-sm text-neutral-400">
-              <li>
-                <a
-                  href="#how-it-works"
-                  className="hover:text-brand-primary transition-all duration-300"
-                >
-                  How it Works
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#features"
-                  className="hover:text-brand-primary transition-all duration-300"
-                >
-                  Platform Features
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#testimonials"
-                  className="hover:text-brand-primary transition-all duration-300"
-                >
-                  Users Reviews
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          {/* Support */}
-          <div>
-            <h4 className="text-white mb-6 font-bold uppercase tracking-widest text-xs">
-              Knowledge
-            </h4>
-            <ul className="space-y-3 text-sm text-neutral-400">
-              <li>
-                <Link
-                  to="/help"
-                  className="hover:text-brand-primary transition-all duration-300"
-                >
-                  Help Center
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/safety"
-                  className="hover:text-brand-primary transition-all duration-300"
-                >
-                  Safety Guidelines
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/terms"
-                  className="hover:text-brand-primary transition-all duration-300"
-                >
-                  Terms of Service
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Connect */}
-          <div>
-            <h4 className="text-white mb-6 font-bold uppercase tracking-widest text-xs">
-              Connect
-            </h4>
-            <div className="flex gap-4">
-              <a
-                href="#"
-                className="w-10 h-10 rounded-xl bg-neutral-900 border border-white/5 flex items-center justify-center hover:bg-brand-primary/10 hover:border-brand-primary/20 transition-all duration-300 group"
-              >
-                <Twitter className="w-5 h-5 text-neutral-400 group-hover:text-brand-primary" />
-              </a>
-              <a
-                href="#"
-                className="w-10 h-10 rounded-xl bg-neutral-900 border border-white/5 flex items-center justify-center hover:bg-brand-primary/10 hover:border-brand-primary/20 transition-all duration-300 group"
-              >
-                <Github className="w-5 h-5 text-neutral-400 group-hover:text-brand-primary" />
-              </a>
-              <a
-                href="#"
-                className="w-10 h-10 rounded-xl bg-neutral-900 border border-white/5 flex items-center justify-center hover:bg-brand-primary/10 hover:border-brand-primary/20 transition-all duration-300 group"
-              >
-                <Linkedin className="w-5 h-5 text-neutral-400 group-hover:text-brand-primary" />
-              </a>
-            </div>
-          </div>
+           <div className="flex gap-4 text-neutral-400">
+              <a href="#" className="hover:text-white transition-colors"><Twitter className="w-4 h-4" /></a>
+              <a href="#" className="hover:text-white transition-colors"><Linkedin className="w-4 h-4" /></a>
+              <a href="#" className="hover:text-white transition-colors"><Github className="w-4 h-4" /></a>
+           </div>
         </div>
 
-        {/* Bottom */}
-        <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
-          <p className="text-sm text-neutral-500 font-medium">
-            © {new Date().getFullYear()} SkillSwap. All rights reserved.
-          </p>
-          <p className="text-sm text-neutral-500 font-medium flex items-center gap-2">
-            Build with{" "}
-            <span className="text-brand-secondary animate-pulse">❤️</span> for
-            students
-          </p>
+        <div className="max-w-4xl space-y-4 text-neutral-600">
+           <p>
+              SkillSwap is a text-based skill exchange platform. Any trademarks are the property of their respective owners. Unless otherwise noted, use of third party logos does not imply endorsement of, sponsorship of, or affiliation with SkillSwap.
+           </p>
+           <p>
+              SkillSwap is a technology company, not a university. Educational services are provided by community members.
+           </p>
         </div>
       </div>
     </footer>
