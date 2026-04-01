@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { Search, MapPin, Star, MessageCircle, RefreshCw } from 'lucide-react';
+import { Search, RefreshCw } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Card } from '../../components/ui/card';
@@ -9,13 +9,39 @@ import { Badge } from '../../components/ui/badge';
 import api from '../../services/api';
 import { toast } from 'sonner';
 import { useAuth } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 export default function Matching() {
   const { user } = useAuth();
+    const navigate = useNavigate();
   const [query, setQuery] = useState('');
-  const [results, setResults] = useState<any[]>([]);
+    const [results, setResults] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [hasLoadedDefaults, setHasLoadedDefaults] = useState(false);
+
+    const groupedTutors = results.reduce((acc: any[], skillMatch: any) => {
+        const tutor = skillMatch.User;
+        if (!tutor?.id) return acc;
+
+        const existing = acc.find((item) => item.id === tutor.id);
+        if (existing) {
+            if (!existing.matchedSkills.includes(skillMatch.name)) {
+                existing.matchedSkills.push(skillMatch.name);
+            }
+            return acc;
+        }
+
+        acc.push({
+            id: tutor.id,
+            name: tutor.name,
+            avatar: tutor.avatar,
+            credits: tutor.credits,
+            bio: tutor.bio,
+            matchedSkills: [skillMatch.name],
+            firstSkillId: skillMatch.id
+        });
+        return acc;
+    }, []);
 
   useEffect(() => {
     if (user?.Skills && !hasLoadedDefaults) {
@@ -103,32 +129,60 @@ export default function Matching() {
         </Button>
       </div>
 
-      <div className="grid gap-4">
-        {results.map((skill: any) => (
-            <motion.div key={skill.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <div className="grid gap-4">
+                {groupedTutors.map((tutor: any) => (
+                        <motion.div key={tutor.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                 <Card className="p-4 bg-neutral-900/40 border-neutral-800 flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <Avatar>
-                            <AvatarImage src={skill.User.avatar} />
-                            <AvatarFallback>{skill.User.name.charAt(0)}</AvatarFallback>
+                                                        <AvatarImage src={tutor.avatar} />
+                                                        <AvatarFallback>{tutor.name?.charAt(0) || 'U'}</AvatarFallback>
                         </Avatar>
                         <div>
-                            <h3 className="font-semibold">{skill.User.name}</h3>
-                            <p className="text-sm text-neutral-400">Teaches: {skill.name}</p>
-                            <div className="flex gap-2 mt-1">
+                                                        <h3 className="font-semibold">{tutor.name}</h3>
+                                                        <p className="text-sm text-neutral-400">{tutor.bio || 'No bio added yet.'}</p>
+                                                        <div className="flex gap-2 mt-2 flex-wrap">
+                                                                {tutor.matchedSkills.map((matchedSkill: string) => (
+                                                                    <Badge key={`${tutor.id}-${matchedSkill}`} variant="outline" className="text-xs">
+                                                                        {matchedSkill}
+                                                                    </Badge>
+                                                                ))}
                                 <Badge variant="secondary" className="text-xs">
-                                    {skill.User.credits} Credits Cost
+                                                                        {tutor.credits} Credits Cost
                                 </Badge>
                             </div>
                         </div>
                     </div>
-                    <Button onClick={() => handleRequestSession(skill.User.id, skill.id, skill.name)}>
-                        Request Session
-                    </Button>
+                    <div className="flex items-center gap-2">
+                                                <Button
+                                                    variant="outline"
+                                                    onClick={() => navigate(`/dashboard/users/${tutor.id}`, {
+                                                        state: {
+                                                            initialProfile: {
+                                                                id: tutor.id,
+                                                                name: tutor.name,
+                                                                avatar: tutor.avatar,
+                                                                bio: tutor.bio,
+                                                                credits: tutor.credits,
+                                                                Skills: tutor.matchedSkills.map((name: string, idx: number) => ({
+                                                                    id: `${tutor.id}-${idx}`,
+                                                                    name,
+                                                                    type: 'TEACH'
+                                                                }))
+                                                            }
+                                                        }
+                                                    })}
+                                                >
+                            View Profile
+                        </Button>
+                                                <Button onClick={() => handleRequestSession(tutor.id, tutor.firstSkillId, tutor.matchedSkills[0])}>
+                            Request Session
+                        </Button>
+                    </div>
                 </Card>
             </motion.div>
         ))}
-        {!loading && results.length === 0 && query && (
+                {!loading && groupedTutors.length === 0 && query && (
             <p className="text-center text-neutral-500">No matching tutors found.</p>
         )}
       </div>
