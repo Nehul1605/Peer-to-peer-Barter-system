@@ -47,4 +47,19 @@ const updateProfile = asyncHandler(async (req, res) => {
     res.json(new ApiResponse(200, updatedUser, "Profile updated successfully"));
 });
 
-export { getProfile, updateProfile };
+const getPublicProfile = asyncHandler(async (req, res) => {
+    const { userId } = req.params;
+
+    const user = await User.findByPk(userId, {
+      include: [{ model: Skill }],
+      attributes: ['id', 'name', 'bio', 'avatar', 'credits', 'createdAt']
+    });
+
+    if (!user) {
+        throw new ApiError(404, "User not found");
+    }
+
+    res.json(new ApiResponse(200, user, "Public profile fetched successfully"));
+});
+
+export { getProfile, updateProfile, getPublicProfile };

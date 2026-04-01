@@ -3,6 +3,7 @@ import { Op } from 'sequelize';
 import { ApiError } from '../utils/ApiError.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
+import { sendSessionScheduledEmail } from '../services/mailService.js';
 import jwt from 'jsonwebtoken';
 import fs from 'fs';
 
@@ -44,7 +45,7 @@ const getMySessions = asyncHandler(async (req, res) => {
 
 const updateSessionStatus = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    const { status, actualDuration } = req.body; // 'SCHEDULED', 'COMPLETED', 'CANCELLED'
+    const { status, actualDuration, scheduledAt } = req.body; // 'SCHEDULED', 'COMPLETED', 'CANCELLED'
     const session = await Session.findByPk(id);
 
     if (!session) {
@@ -82,8 +83,41 @@ const updateSessionStatus = asyncHandler(async (req, res) => {
         session.meetingLink = `https://meet.jit.si/SkillSwap-${session.id}`;
     }
 
+    if (status === 'SCHEDULED' && scheduledAt) {
+        const parsedDate = new Date(scheduledAt);
+        if (Number.isNaN(parsedDate.getTime())) {
+            throw new ApiError(400, 'Invalid scheduledAt date');
+        }
+        session.scheduledAt = parsedDate;
+    }
+
     session.status = status;
     await session.save();
+
+    if (status === 'SCHEDULED') {
+        const sessionWithParticipants = await Session.findByPk(id, {
+            include: [
+                { model: User, as: 'teacher', attributes: ['name', 'id', 'email'] },
+                { model: User, as: 'learner', attributes: ['name', 'id', 'email'] },
+                { model: Skill, attributes: ['name'] }
+            ]
+        });
+
+        if (sessionWithParticipants?.learner?.email) {
+            try {
+                await sendSessionScheduledEmail({
+                    learnerEmail: sessionWithParticipants.learner.email,
+                    learnerName: sessionWithParticipants.learner.name,
+                    teacherName: sessionWithParticipants.teacher?.name,
+                    skillName: sessionWithParticipants.Skill?.name,
+                    scheduledAt: sessionWithParticipants.scheduledAt,
+                    meetingLink: sessionWithParticipants.meetingLink
+                });
+            } catch (mailError) {
+                console.error('Failed to send scheduled session email:', mailError);
+            }
+        }
+    }
     
     res.json(new ApiResponse(200, session, "Session status updated"));
 });

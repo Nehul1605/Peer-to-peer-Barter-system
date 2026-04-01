@@ -23,6 +23,7 @@ import Sessions from "./pages/dashboard/Sessions";
 import Credits from "./pages/dashboard/Credits";
 import MeetingRoom from "./pages/dashboard/MeetingRoom";
 import SessionReview from "./pages/dashboard/SessionReview";
+import UserPublicProfile from "./pages/dashboard/UserPublicProfile";
 
 /**
  * SkillSwap - Peer-to-Peer Skill Exchange Platform
@@ -76,6 +77,8 @@ export default function App() {
             <Route path="matching" element={<Matching />} />
             <Route path="sessions" element={<Sessions />} />
             <Route path="credits" element={<Credits />} />
+            <Route path="user/:userId" element={<UserPublicProfile />} />
+            <Route path="users/:userId" element={<UserPublicProfile />} />
             <Route path="room/:sessionId" element={<MeetingRoom />} />
             <Route path="session/:sessionId/room" element={<MeetingRoom />} />
             <Route

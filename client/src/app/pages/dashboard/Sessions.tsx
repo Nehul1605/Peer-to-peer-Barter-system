@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Video, Calendar, Clock, User, ChevronRight, CheckCircle2, XCircle, AlertCircle, Sparkles } from 'lucide-react';
+import { Video, Calendar, Clock, User, ChevronRight, CheckCircle2, XCircle, AlertCircle, Sparkles, Globe2 } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { Card } from '../../components/ui/card';
 import { Badge } from '../../components/ui/badge';
@@ -12,9 +12,12 @@ import { format } from 'date-fns';
 
 export default function Sessions() {
   const [sessions, setSessions] = useState<any[]>([]);
+  const [scheduleInputs, setScheduleInputs] = useState<Record<string, string>>({});
+  const [rescheduleOpen, setRescheduleOpen] = useState<Record<string, boolean>>({});
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const { user } = useAuth();
+  const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
 
   useEffect(() => {
     fetchSessions();
@@ -24,7 +27,17 @@ export default function Sessions() {
     try {
       const response = await api.get('/sessions');
       if (response.data.success) {
-        setSessions(response.data.data);
+        const nextSessions = response.data.data;
+        setSessions(nextSessions);
+        setScheduleInputs((prev) => {
+          const nextInputs = { ...prev };
+          nextSessions.forEach((session: any) => {
+            if (!nextInputs[session.id] && session.scheduledAt) {
+              nextInputs[session.id] = format(new Date(session.scheduledAt), "yyyy-MM-dd'T'HH:mm");
+            }
+          });
+          return nextInputs;
+        });
       }
     } catch (error) {
       toast.error('Failed to load sessions');
@@ -33,16 +46,29 @@ export default function Sessions() {
     }
   };
 
-  const updateSessionStatus = async (sessionId: string, status: string) => {
+  const updateSessionStatus = async (
+    sessionId: string,
+    status: string,
+    scheduledAt?: string,
+    successMessage?: string
+  ) => {
     try {
-      const response = await api.put(`/sessions/${sessionId}`, { status });
+      const response = await api.put(`/sessions/${sessionId}`, { status, scheduledAt });
       if (response.data.success) {
-        toast.success(`Session ${status.toLowerCase()}`);
+        toast.success(successMessage || `Session ${status.toLowerCase()}`);
         fetchSessions();
       }
     } catch (error) {
       toast.error('Failed to update session');
     }
+  };
+
+  const formatDateTimeInTz = (dateValue: string) => {
+    return new Intl.DateTimeFormat(undefined, {
+      dateStyle: 'medium',
+      timeStyle: 'short',
+      timeZone: userTimeZone
+    }).format(new Date(dateValue));
   };
 
   const getStatusColor = (status: string) => {
@@ -149,7 +175,18 @@ export default function Sessions() {
                                 <Clock className="w-4 h-4 text-blue-400" />
                                 {session.scheduledAt ? format(new Date(session.scheduledAt), 'h:mm a') : 'No Time'}
                               </span>
+                              {session.scheduledAt ? (
+                                <span className="flex items-center gap-1.5 bg-white/5 px-2.5 py-1 rounded-md">
+                                  <Globe2 className="w-4 h-4 text-violet-400" />
+                                  {userTimeZone}
+                                </span>
+                              ) : null}
                             </div>
+                            {session.scheduledAt ? (
+                              <p className="text-xs text-neutral-500 mt-2">
+                                Local time: {formatDateTimeInTz(session.scheduledAt)}
+                              </p>
+                            ) : null}
                           </div>
                         </div>
                       </div>
@@ -157,10 +194,29 @@ export default function Sessions() {
                       <div className="flex flex-col items-stretch lg:items-end gap-3 pt-6 border-t border-white/5 lg:border-t-0 lg:pt-0 min-w-[200px] z-10">
                         {isPending && !isRequester ? (
                           <div className="flex flex-col gap-3 w-full">
+                            <input
+                              type="datetime-local"
+                              value={scheduleInputs[session.id] || ''}
+                              onChange={(e) => setScheduleInputs((prev) => ({ ...prev, [session.id]: e.target.value }))}
+                              className="w-full bg-black/30 border border-white/10 rounded-xl px-3 py-3 text-sm text-white"
+                            />
+                            <p className="text-xs text-neutral-500">Scheduling in your timezone: {userTimeZone}</p>
                             <Button 
                               variant="outline" 
                               className="w-full bg-emerald-500/10 text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20 hover:border-emerald-500/50 hover:text-emerald-300 transition-all rounded-xl py-6 text-base font-medium"
-                              onClick={() => updateSessionStatus(session.id, 'SCHEDULED')}
+                              onClick={() => {
+                                const selectedDate = scheduleInputs[session.id];
+                                if (!selectedDate) {
+                                  toast.error('Please select date and time before accepting');
+                                  return;
+                                }
+                                updateSessionStatus(
+                                  session.id,
+                                  'SCHEDULED',
+                                  new Date(selectedDate).toISOString(),
+                                  'Session accepted and scheduled'
+                                );
+                              }}
                             >
                               <CheckCircle2 className="w-5 h-5 mr-2" /> Accept Request
                             </Button>
@@ -181,17 +237,58 @@ export default function Sessions() {
                         ) : null}
 
                         {canJoin && (
-                          <Button 
-                            className="w-full relative group/btn overflow-hidden rounded-xl px-8 py-8 bg-white text-black hover:bg-neutral-200 transition-all shadow-[0_0_40px_-5px_rgba(255,255,255,0.4)] hover:shadow-[0_0_60px_-5px_rgba(255,255,255,0.6)] border-none"
-                            onClick={() => navigate(`/dashboard/session/${session.id}/room`)}
-                          >
-                            <span className="relative z-10 flex flex-col items-center gap-1">
-                              <span className="flex items-center gap-2 text-lg font-bold">
-                                <Video className="w-6 h-6" /> Join Session
+                          <div className="w-full space-y-3">
+                            <Button 
+                              className="w-full relative group/btn overflow-hidden rounded-xl px-8 py-8 bg-white text-black hover:bg-neutral-200 transition-all shadow-[0_0_40px_-5px_rgba(255,255,255,0.4)] hover:shadow-[0_0_60px_-5px_rgba(255,255,255,0.6)] border-none"
+                              onClick={() => navigate(`/dashboard/session/${session.id}/room`)}
+                            >
+                              <span className="relative z-10 flex flex-col items-center gap-1">
+                                <span className="flex items-center gap-2 text-lg font-bold">
+                                  <Video className="w-6 h-6" /> Join Session
+                                </span>
+                                <span className="text-xs font-semibold uppercase tracking-wider text-black/60">Room is ready</span>
                               </span>
-                              <span className="text-xs font-semibold uppercase tracking-wider text-black/60">Room is ready</span>
-                            </span>
-                          </Button>
+                            </Button>
+
+                            <Button
+                              variant="outline"
+                              className="w-full border-white/10 hover:bg-white/5"
+                              onClick={() => setRescheduleOpen((prev) => ({ ...prev, [session.id]: !prev[session.id] }))}
+                            >
+                              {rescheduleOpen[session.id] ? 'Cancel Reschedule' : 'Reschedule Session'}
+                            </Button>
+
+                            {rescheduleOpen[session.id] ? (
+                              <div className="w-full p-3 rounded-xl border border-white/10 bg-black/20 space-y-3">
+                                <input
+                                  type="datetime-local"
+                                  value={scheduleInputs[session.id] || ''}
+                                  onChange={(e) => setScheduleInputs((prev) => ({ ...prev, [session.id]: e.target.value }))}
+                                  className="w-full bg-black/30 border border-white/10 rounded-xl px-3 py-3 text-sm text-white"
+                                />
+                                <p className="text-xs text-neutral-500">Rescheduling in your timezone: {userTimeZone}</p>
+                                <Button
+                                  className="w-full"
+                                  onClick={() => {
+                                    const selectedDate = scheduleInputs[session.id];
+                                    if (!selectedDate) {
+                                      toast.error('Please select a new date and time');
+                                      return;
+                                    }
+                                    updateSessionStatus(
+                                      session.id,
+                                      'SCHEDULED',
+                                      new Date(selectedDate).toISOString(),
+                                      'Session rescheduled successfully'
+                                    );
+                                    setRescheduleOpen((prev) => ({ ...prev, [session.id]: false }));
+                                  }}
+                                >
+                                  Save New Schedule
+                                </Button>
+                              </div>
+                            ) : null}
+                          </div>
                         )}
 
                         {!isPending && !canJoin && (
