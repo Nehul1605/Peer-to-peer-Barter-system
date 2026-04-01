@@ -76,6 +76,7 @@ export default function App() {
             <Route path="matching" element={<Matching />} />
             <Route path="sessions" element={<Sessions />} />
             <Route path="credits" element={<Credits />} />
+            <Route path="room/:sessionId" element={<MeetingRoom />} />
             <Route path="session/:sessionId/room" element={<MeetingRoom />} />
             <Route
               path="session/:sessionId/review"

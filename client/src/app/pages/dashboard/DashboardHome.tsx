@@ -120,7 +120,7 @@ export default function DashboardHome() {
                 </p>
               </div>
               <Button variant="outline" asChild>
-                <Link to="/dashboard/match">Browse Mentors</Link>
+                <Link to="/dashboard/matching">Browse Mentors</Link>
               </Button>
             </Card>
           )}
