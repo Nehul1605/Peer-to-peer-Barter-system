@@ -9,6 +9,7 @@ router.use(verifyJWT);
 router.post('/request', createSessionRequest);
 router.get('/', getMySessions);
 router.put('/:id', updateSessionStatus);
+router.put('/:id/status', updateSessionStatus);
 router.post('/:sessionId/review', addReview);
 router.get('/:sessionId/token', generateJitsiToken);
 

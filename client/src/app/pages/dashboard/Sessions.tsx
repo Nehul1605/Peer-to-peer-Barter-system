@@ -35,7 +35,7 @@ export default function Sessions() {
 
   const updateSessionStatus = async (sessionId: string, status: string) => {
     try {
-      const response = await api.put(`/sessions/${sessionId}/status`, { status });
+      const response = await api.put(`/sessions/${sessionId}`, { status });
       if (response.data.success) {
         toast.success(`Session ${status.toLowerCase()}`);
         fetchSessions();
@@ -95,7 +95,7 @@ export default function Sessions() {
                 <p className="text-muted-foreground mb-8 max-w-sm text-lg">
                   You don't have any upcoming or pending sessions. Explore matches to start learning!
                 </p>
-                <Button onClick={() => navigate('/dashboard/match')} className="rounded-full px-8 py-6 text-lg font-medium">
+                <Button onClick={() => navigate('/dashboard/matching')} className="rounded-full px-8 py-6 text-lg font-medium">
                   Find Matches <ChevronRight className="w-5 h-5 ml-2" />
                 </Button>
               </Card>
@@ -183,7 +183,7 @@ export default function Sessions() {
                         {canJoin && (
                           <Button 
                             className="w-full relative group/btn overflow-hidden rounded-xl px-8 py-8 bg-white text-black hover:bg-neutral-200 transition-all shadow-[0_0_40px_-5px_rgba(255,255,255,0.4)] hover:shadow-[0_0_60px_-5px_rgba(255,255,255,0.6)] border-none"
-                            onClick={() => navigate(`/dashboard/room/${session.id}`)}
+                            onClick={() => navigate(`/dashboard/session/${session.id}/room`)}
                           >
                             <span className="relative z-10 flex flex-col items-center gap-1">
                               <span className="flex items-center gap-2 text-lg font-bold">
