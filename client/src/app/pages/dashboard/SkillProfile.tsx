@@ -18,23 +18,56 @@ export default function SkillProfile() {
   const [newSkillKnow, setNewSkillKnow] = useState('');
   const [newSkillLearn, setNewSkillLearn] = useState('');
   const [loading, setLoading] = useState(false);
-  
-  // Decide if we should show view mode or edit mode initially
-  const isProfileEmpty = !user?.bio && (!user?.Skills || user.Skills.length === 0);
-  const [isEditing, setIsEditing] = useState(isProfileEmpty);
+    const [isEditing, setIsEditing] = useState(false);
+    const [isInitialLoading, setIsInitialLoading] = useState(true);
+    const [isProfileConfigured, setIsProfileConfigured] = useState(false);
+    const [hasResolvedInitialMode, setHasResolvedInitialMode] = useState(false);
 
-  useEffect(() => {
-    if (user && user.Skills) {
-      setSkillsIKnow(user.Skills.filter((s:any) => s.type === 'TEACH').map((s:any) => s.name));
-      setSkillsToLearn(user.Skills.filter((s:any) => s.type === 'LEARN').map((s:any) => s.name));
-      setBio(user.bio || '');
-    }
-    if (!user?.bio && (!user?.Skills || user.Skills.length === 0)) {
-        setIsEditing(true);
-    } else {
-        setIsEditing(false);
-    }
-  }, [user]);
+    const hydrateProfileState = (profileUser: any) => {
+        const skills = profileUser?.Skills || [];
+        const nextBio = profileUser?.bio || '';
+        setSkillsIKnow(skills.filter((s: any) => s.type === 'TEACH').map((s: any) => s.name));
+        setSkillsToLearn(skills.filter((s: any) => s.type === 'LEARN').map((s: any) => s.name));
+        setBio(nextBio);
+
+        const hasConfiguredProfile = Boolean(nextBio?.trim()) || skills.length > 0;
+        setIsProfileConfigured(hasConfiguredProfile);
+        return hasConfiguredProfile;
+    };
+
+    useEffect(() => {
+        const loadProfile = async () => {
+            try {
+                const response = await api.get('/users/profile');
+                if (response.data?.success) {
+                    const profileUser = response.data.data;
+                    setUser(profileUser);
+                    const configured = hydrateProfileState(profileUser);
+                    setIsEditing(!configured);
+                    setHasResolvedInitialMode(true);
+                    return;
+                }
+            } catch (error) {
+                console.error('Failed to load profile for skill page', error);
+            }
+
+            const configured = hydrateProfileState(user);
+            setIsEditing(!configured);
+            setHasResolvedInitialMode(true);
+            setIsInitialLoading(false);
+        };
+
+        loadProfile().finally(() => setIsInitialLoading(false));
+    }, [setUser]);
+
+    useEffect(() => {
+        if (isInitialLoading || !user) return;
+        const configured = hydrateProfileState(user);
+        if (!hasResolvedInitialMode) {
+            setIsEditing(!configured);
+            setHasResolvedInitialMode(true);
+        }
+    }, [user, isInitialLoading, hasResolvedInitialMode]);
 
   const addSkillKnow = () => {
     if (newSkillKnow.trim() && !skillsIKnow.includes(newSkillKnow.trim())) {
@@ -67,7 +100,9 @@ export default function SkillProfile() {
         skillsToLearn: skillsToLearn
       });
       if (response.data.success) {
-        setUser(response.data.data);
+                const updatedUser = response.data.data;
+                setUser(updatedUser);
+                setIsProfileConfigured(hydrateProfileState(updatedUser));
         toast.success("Profile updated successfully!");
         setIsEditing(false);
       }
@@ -81,6 +116,12 @@ export default function SkillProfile() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 pb-12 mt-8 px-4 md:px-0">
+            {isInitialLoading ? (
+                <Card className="bg-neutral-900/40 backdrop-blur-xl border-white/10 p-8 rounded-3xl text-neutral-300">
+                    Loading your profile...
+                </Card>
+            ) : (
+            <>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-white/5 pb-8">
         <motion.div
           initial={{ opacity: 0, x: -20 }}
@@ -109,7 +150,7 @@ export default function SkillProfile() {
             exit={{ opacity: 0, scale: 0.98 }}
             className="space-y-6"
           >
-            {isProfileEmpty && (
+            {!isProfileConfigured && (
                 <div className="bg-emerald-500/10 border border-emerald-500/20 p-6 rounded-2xl flex items-start gap-4 mb-8">
                     <div className="p-3 bg-emerald-500/20 rounded-full text-emerald-400">
                         <UserCircle className="w-6 h-6" />
@@ -210,7 +251,7 @@ export default function SkillProfile() {
                 >
                     {loading ? 'Saving Changes...' : 'Save Profile'}
                 </Button>
-                {!isProfileEmpty && (
+                {isProfileConfigured && (
                     <Button 
                         onClick={() => setIsEditing(false)} 
                         variant="secondary"
@@ -284,6 +325,8 @@ export default function SkillProfile() {
           </motion.div>
       )}
       </AnimatePresence>
+            </>
+            )}
     </div>
   );
 }
