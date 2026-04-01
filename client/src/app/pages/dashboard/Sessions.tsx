@@ -102,14 +102,14 @@ export default function Sessions() {
             </motion.div>
           ) : (
             sessions.map((session: any, index: number) => {
-              const isRequester = session.requesterId?._id === user?._id;
-              const otherPerson = isRequester ? session.providerId : session.requesterId;
+              const isRequester = session.learnerId === user?.id;
+              const otherPerson = isRequester ? session.teacher : session.learner;
               const isPending = session.status === 'PENDING';
               const canJoin = session.status === 'SCHEDULED';
               
               return (
                 <motion.div
-                  key={session._id}
+                  key={session.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
@@ -124,7 +124,7 @@ export default function Sessions() {
                             {session.status}
                           </Badge>
                           <span className="text-sm font-medium text-neutral-400 flex items-center gap-2 bg-white/5 px-3 py-1 rounded-full">
-                            {isRequester ? '📚 Learning' : '🎓 Teaching'} • <span className="text-white">{session.skillId?.name || 'Skill Room'}</span>
+                            {isRequester ? '📚 Learning' : '🎓 Teaching'} • <span className="text-white">{session.Skill?.name || 'Skill Room'}</span>
                           </span>
                         </div>
                         
@@ -160,14 +160,14 @@ export default function Sessions() {
                             <Button 
                               variant="outline" 
                               className="w-full bg-emerald-500/10 text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20 hover:border-emerald-500/50 hover:text-emerald-300 transition-all rounded-xl py-6 text-base font-medium"
-                              onClick={() => updateSessionStatus(session._id, 'SCHEDULED')}
+                              onClick={() => updateSessionStatus(session.id, 'SCHEDULED')}
                             >
                               <CheckCircle2 className="w-5 h-5 mr-2" /> Accept Request
                             </Button>
                             <Button 
                               variant="ghost" 
                               className="w-full text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 transition-colors rounded-xl py-6"
-                              onClick={() => updateSessionStatus(session._id, 'CANCELLED')}
+                              onClick={() => updateSessionStatus(session.id, 'CANCELLED')}
                             >
                               <XCircle className="w-5 h-5 mr-2" /> Decline
                             </Button>
@@ -183,7 +183,7 @@ export default function Sessions() {
                         {canJoin && (
                           <Button 
                             className="w-full relative group/btn overflow-hidden rounded-xl px-8 py-8 bg-white text-black hover:bg-neutral-200 transition-all shadow-[0_0_40px_-5px_rgba(255,255,255,0.4)] hover:shadow-[0_0_60px_-5px_rgba(255,255,255,0.6)] border-none"
-                            onClick={() => navigate(`/dashboard/room/${session._id}`)}
+                            onClick={() => navigate(`/dashboard/room/${session.id}`)}
                           >
                             <span className="relative z-10 flex flex-col items-center gap-1">
                               <span className="flex items-center gap-2 text-lg font-bold">

@@ -8,7 +8,12 @@ const searchSkills = asyncHandler(async (req, res) => {
     const whereClause = {};
 
     if (query) {
-        whereClause.name = { [Op.iLike]: `%${query}%` };
+        const queries = query.split(',').map(q => q.trim()).filter(Boolean);
+        if (queries.length > 1) {
+            whereClause.name = { [Op.or]: queries.map(q => ({ [Op.iLike]: `%${q}%` })) };
+        } else if (queries.length === 1) {
+            whereClause.name = { [Op.iLike]: `%${queries[0]}%` };
+        }
     }
     if (type) {
         whereClause.type = type;

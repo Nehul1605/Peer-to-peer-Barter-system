@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Search, MapPin, Star, MessageCircle, RefreshCw } from 'lucide-react';
 import { Button } from '../../components/ui/button';
@@ -8,27 +8,67 @@ import { Avatar, AvatarFallback, AvatarImage } from '../../components/ui/avatar'
 import { Badge } from '../../components/ui/badge';
 import api from '../../services/api';
 import { toast } from 'sonner';
+import { useAuth } from '../../context/AuthContext';
 
 export default function Matching() {
+  const { user } = useAuth();
   const [query, setQuery] = useState('');
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [hasLoadedDefaults, setHasLoadedDefaults] = useState(false);
 
-  const handleSearch = async () => {
+  useEffect(() => {
+    if (user?.Skills && !hasLoadedDefaults) {
+      const skillsToLearn = user.Skills.filter((s: any) => s.type === 'LEARN').map((s: any) => s.name);
+      if (skillsToLearn.length > 0) {
+        const defaultQuery = skillsToLearn.join(', ');
+        setQuery(defaultQuery);
+        fetchMultipleMatches(skillsToLearn);
+      }
+      setHasLoadedDefaults(true);
+    }
+  }, [user, hasLoadedDefaults]);
+
+  const fetchMultipleMatches = async (skills: string[]) => {
       setLoading(true);
       try {
-          const response = await api.get('/skills/search', {
-              params: { query, type: 'TEACH' }
-          });
-          if (response.data.success) {
-            setResults(response.data.data);
+          const allResults = [];
+          const seenSkillIds = new Set();
+          
+          for (const skill of skills) {
+              const response = await api.get('/skills/search', {
+                  params: { query: skill.trim(), type: 'TEACH' }
+              });
+              if (response.data.success) {
+                  for (const match of response.data.data) {
+                      if (!seenSkillIds.has(match.id)) {
+                          seenSkillIds.add(match.id);
+                          allResults.push(match);
+                      }
+                  }
+              }
           }
+          setResults(allResults);
       } catch (error) {
           console.error(error);
           toast.error("Search failed");
       } finally {
           setLoading(false);
       }
+  };
+
+  const fetchMatches = async (searchQuery: string) => {
+      // If the user manually types comma-separated skills, we can search them one by one
+      const skills = searchQuery.split(',').map(s => s.trim()).filter(Boolean);
+      if (skills.length > 0) {
+          await fetchMultipleMatches(skills);
+      } else {
+          setResults([]);
+      }
+  };
+
+  const handleSearch = () => {
+      fetchMatches(query);
   };
 
   const handleRequestSession = async (teacherId: string, skillId: string, topic: string) => {
